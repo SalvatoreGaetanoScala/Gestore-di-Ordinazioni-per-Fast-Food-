@@ -22,7 +22,12 @@ Il sistema ha l'obiettivo di abbattere i tempi di attesa in coda alle casse fisi
 *   `src/domain/`: Contiene le classi di dominio del problema (Ordine, Prodotto, Personalizzazione, ecc.).
 *   `src/services/`: Moduli per la gestione dei dati in memoria (Catalogo, CodaCucina) e simulazione di servizi esterni.
 *   `src/test/`: Suite di test automatizzati scritti in JUnit.
-*   `documentation/`: Contiene la documentazione in PDF e i sorgenti dei diagrammi UML relativi alle fasi di Ideazione ed Elaborazione.
+*   `documentazione/`: Contiene la documentazione in PDF, i sorgenti e le foto dei diagrammi UML relativi alle fasi di Ideazione ed Elaborazione.
+*   `documentazione completa/`: Contiene la documentazione completa in PDF e i sorgenti  e le fotodei diagrammi UML relativi a tutte le fasi del progetto.
+*   `immagini`: contiene le varie foto dei menù e dei relativi prodotti dell'applicazione.
+*   `V4_Gestore di Ordinazioni per Fast Food.jar`: eseguibile dell'applicazione.
+    
+
 
 ## 🚀 Come Avviare l'Applicazione
 1. Clonare il repository sul proprio computer locale:
