@@ -25,7 +25,6 @@ Il sistema ha l'obiettivo di abbattere i tempi di attesa in coda alle casse fisi
 *   `documentazione/`: Contiene la documentazione in PDF, i sorgenti e le foto dei diagrammi UML relativi alle fasi di Ideazione ed Elaborazione.
 *   `documentazione completa/`: Contiene la documentazione completa in PDF e i sorgenti  e le fotodei diagrammi UML relativi a tutte le fasi del progetto.
 *   `immagini`: contiene le varie foto dei menù e dei relativi prodotti dell'applicazione.
-*   `V4_Gestore di Ordinazioni per Fast Food.jar`: eseguibile dell'applicazione.
     
 
 
