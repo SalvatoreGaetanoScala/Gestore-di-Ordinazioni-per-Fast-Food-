@@ -31,4 +31,4 @@ Il sistema ha l'obiettivo di abbattere i tempi di attesa in coda alle casse fisi
 ## 🚀 Come Avviare l'Applicazione
 1. Clonare il repository sul proprio computer locale:
    ```bash
-   git clone [https://github.com/TUO-USERNAME/Gestore-Ordinazioni-FastFood.git](https://github.com/TUO-USERNAME/Gestore-Ordinazioni-FastFood.git)
+   git clone [https://github.com/SalvatoreGaetanoScala/Gestore-Ordinazioni-FastFood.git](https://github.com/SalvatoreGaetanoScala/Gestore-Ordinazioni-FastFood.git)
