@@ -1,0 +1,15 @@
+# Eseguibili e file compilati Java
+*.jar
+*.class
+
+# File di sistema macOS
+.DS_Store
+__MACOSX/
+
+# Configurazione degli IDE (Eclipse, IntelliJ, VS Code)
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+.vscode/
