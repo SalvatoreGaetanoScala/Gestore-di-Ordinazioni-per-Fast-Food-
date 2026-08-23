@@ -13,20 +13,17 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * La classe {@code ClientPanel} costruisce l'interfaccia utente (UI) lato cliente, 
- * ovvero lo schermo touch che gli utenti utilizzano per effettuare l'ordinazione.
- * Gestisce la navigazione tra le categorie, la personalizzazione dei prodotti, 
- * il riepilogo del carrello e la procedura finale di pagamento.
- */
 public class ClientPanel extends JPanel {
+    
+    // Aggiunto per risolvere l'avviso "serial" in modo pulito
+    private static final long serialVersionUID = 1L;
+    
     private Chiosco chiosco;
     private Runnable onOrderCompleted; 
     
     private CardLayout cardLayout;
     private JPanel mainCards;
     
-    // Bottoni Sidebar per gestione colori
     private RoundedButton btnMenuCompleto;
     private RoundedButton btnPanini;
     private RoundedButton btnSfiziosita;
@@ -51,17 +48,11 @@ public class ClientPanel extends JPanel {
     private final Color COLOR_DARK = new Color(40, 40, 40);
 
     private JPanel panelSummaryContent;
+    private JPanel pannelloModificaContainer;
+
     private JTextField txtCarta, txtScadenza, txtCVV;
     private String rawCarta = "", rawScadenza = "", rawCVV = "";
 
-    /**
-     * Costruttore della classe {@code ClientPanel}.
-     * Dispone i componenti dell'interfaccia grafica (Sidebar, Pannelli centrali e Footer).
-     *
-     * @param chiosco          Il controller principale del sistema.
-     * @param onOrderCompleted Interfaccia {@link Runnable} per gestire un evento di callback
-     *                         (utile ad es. per avvisare la cucina alla chiusura dell'ordine).
-     */
     public ClientPanel(Chiosco chiosco, Runnable onOrderCompleted) {
         this.chiosco = chiosco;
         this.onOrderCompleted = onOrderCompleted;
@@ -70,13 +61,12 @@ public class ClientPanel extends JPanel {
         setBackground(COLOR_BG);
         setBorder(new EmptyBorder(15, 15, 15, 15));
 
-        // --- SIDEBAR (Sinistra - Categorie impilate) ---
+        // --- SIDEBAR ---
         JPanel sidebar = new JPanel(new GridLayout(5, 1, 10, 15));
         sidebar.setBackground(COLOR_BG);
         sidebar.setPreferredSize(new Dimension(250, 0));
 
-        // Inizializzati tutti di giallo di default
-        btnMenuCompleto = new RoundedButton("MENU' COMBO", COLOR_YELLOW, Color.BLACK, 20);
+        btnMenuCompleto = new RoundedButton("<html><center>MENU' COMBO<br>(PROMOZIONI)</center></html>", COLOR_YELLOW, Color.BLACK, 20);
         btnPanini = new RoundedButton("PANINI", COLOR_YELLOW, Color.BLACK, 20);
         btnSfiziosita = new RoundedButton("SFIZIOSITA'", COLOR_YELLOW, Color.BLACK, 20);
         btnBibite = new RoundedButton("BIBITE", COLOR_YELLOW, Color.BLACK, 20);
@@ -94,7 +84,7 @@ public class ClientPanel extends JPanel {
         sidebar.add(btnBibite);
         sidebar.add(btnDolci);
 
-        // --- MAIN CARDS (Centro - Contenuto dinamico) ---
+        // --- MAIN CARDS ---
         cardLayout = new CardLayout();
         mainCards = new JPanel(cardLayout);
         mainCards.setBackground(COLOR_BG);
@@ -109,39 +99,39 @@ public class ClientPanel extends JPanel {
         };
         
         String[] paniniImages = {
-            "immagini/menu_combo/panini/crispy_chicken.png",
-            "immagini/menu_combo/panini/american_burger.png",
-            "immagini/menu_combo/panini/double_bbq.png",
-            "immagini/menu_combo/panini/veggie_burger.png",
-            "immagini/menu_combo/panini/crispy_fish.png"
+            "immagini/panini/crispy_chicken.png",
+            "immagini/panini/american_burger.png",
+            "immagini/panini/double_bbq.png",
+            "immagini/panini/veggie_burger.png",
+            "immagini/panini/crispy_fish.png"
         };
         
         String[] sfiziositaImages = {
-            "immagini/menu_combo/sfiziosità/patatine_piccole.png",
-            "immagini/menu_combo/sfiziosità/patatine_medie.png",
-            "immagini/menu_combo/sfiziosità/patatine_grandi.png",
-            "immagini/menu_combo/sfiziosità/crocchette_4pz.png",
-            "immagini/menu_combo/sfiziosità/crocchette_8pz.png",
-            "immagini/menu_combo/sfiziosità/ali_4pz.png",
-            "immagini/menu_combo/sfiziosità/ali_8pz.png"
+            "immagini/sfiziosita/patatine_piccole.png",
+            "immagini/sfiziosita/patatine_medie.png",
+            "immagini/sfiziosita/patatine_grandi.png",
+            "immagini/sfiziosita/crocchette_4pz.png",
+            "immagini/sfiziosita/crocchette_8pz.png",
+            "immagini/sfiziosita/ali_4pz.png",
+            "immagini/sfiziosita/ali_8pz.png"
         };
 
         String[] bibiteImages = {
-            "immagini/menu_combo/bevande/acqua_naturale.png",
-            "immagini/menu_combo/bevande/acqua_gassata.png",
-            "immagini/menu_combo/bevande/coca_cola.png",
-            "immagini/menu_combo/bevande/coca_cola_zero.png",
-            "immagini/menu_combo/bevande/sprite.png",
-            "immagini/menu_combo/bevande/pepsi.png"
+            "immagini/bevande/acqua_naturale.png",
+            "immagini/bevande/acqua_gassata.png",
+            "immagini/bevande/coca_cola.png",
+            "immagini/bevande/coca_cola_zero.png",
+            "immagini/bevande/sprite.png",
+            "immagini/bevande/pepsi.png"
         };
         
         String[] dolciImages = {
-            "immagini/menu_combo/dolci/coockie.png",
-            "immagini/menu_combo/dolci/ciambella.png",
-            "immagini/menu_combo/dolci/cono_gelato.png",
-            "immagini/menu_combo/dolci/coppetta_piccola.png",
-            "immagini/menu_combo/dolci/coppetta_media.png",
-            "immagini/menu_combo/dolci/coppetta_grande.png"
+            "immagini/dolci/coockie.png",
+            "immagini/dolci/ciambella.png",
+            "immagini/dolci/cono_gelato.png",
+            "immagini/dolci/coppetta_piccola.png",
+            "immagini/dolci/coppetta_media.png",
+            "immagini/dolci/coppetta_grande.png"
         };
 
         mainCards.add(creaPannelloVuoto(), "Blank");
@@ -169,6 +159,10 @@ public class ClientPanel extends JPanel {
         mainCards.add(creaSceltaPatatineCombo(sfiziositaImages), "SceltaPatatine");
         mainCards.add(creaPannelloRiepilogo(), "Summary");
         mainCards.add(creaPannelloPagamento(), "Payment");
+        
+        pannelloModificaContainer = new JPanel(new BorderLayout());
+        pannelloModificaContainer.setBackground(COLOR_BG);
+        mainCards.add(pannelloModificaContainer, "Modifica");
 
         // --- HEADER E FOOTER ---
         JLabel lblTitolo = new JLabel("Tocca una categoria per iniziare", SwingConstants.CENTER);
@@ -184,39 +178,23 @@ public class ClientPanel extends JPanel {
         aggiornaFooter();
     }
 
-    /**
-     * Gestisce lo stato e la colorazione visiva del pulsante selezionato nella sidebar
-     * e cambia la vista mostrata al centro.
-     *
-     * @param selectedBtn Il bottone che l'utente ha premuto.
-     * @param viewName    Il nome della carta (vista) da mostrare nel {@link CardLayout}.
-     */
     private void selezionaCategoria(RoundedButton selectedBtn, String viewName) {
-        // Riporta tutti i pulsanti al giallo di default
         RoundedButton[] btns = {btnMenuCompleto, btnPanini, btnSfiziosita, btnBibite, btnDolci};
         for (RoundedButton b : btns) {
             b.setButtonColor(COLOR_YELLOW, Color.BLACK);
         }
-        // Il pulsante selezionato diventa rosso con testo bianco
         if (selectedBtn != null) {
             selectedBtn.setButtonColor(COLOR_RED, Color.WHITE);
         }
         switchView(viewName);
     }
 
-    /**
-     * Aggiunge funzionalità di scorrimento tramite "drag and drop" (come uno smartphone)
-     * a un dato pannello, inglobandolo in uno {@code JScrollPane}.
-     *
-     * @param content Il pannello di cui si vuole abilitare lo scorrimento.
-     * @return Uno {@code JScrollPane} configurato.
-     */
     private JScrollPane creaTouchScroll(JPanel content) {
         JScrollPane scroll = new JScrollPane(content);
         scroll.setBorder(null);
-        scroll.getVerticalScrollBar().setUnitIncrement(25); // Velocizza la rotellina del mouse
+        scroll.getVerticalScrollBar().setUnitIncrement(25); 
+        scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        // Ascoltatore per simulare lo scrolling touch tramite trascinamento
         MouseAdapter dragAdapter = new MouseAdapter() {
             private Point origin;
 
@@ -250,39 +228,24 @@ public class ClientPanel extends JPanel {
                 }
             }
         };
-
-        // Aggiunge la funzionalità di drag al pannello contenuto
         content.addMouseListener(dragAdapter);
         content.addMouseMotionListener(dragAdapter);
 
         return scroll;
     }
 
-    /**
-     * Verifica l'esistenza di un'immagine nel percorso specificato o tenta di cercarla
-     * in cartelle di fallback predefinite (spesso utile per aggirare differenze di path OS).
-     *
-     * @param path Il percorso iniziale del file.
-     * @return Un percorso valido per l'immagine o il percorso originale se non trovata in fallback.
-     */
     private String getValidImagePath(String path) {
         if (path == null) return null;
         if (new File(path).exists()) return path;
 
         String fileName = new File(path).getName();
         String[] fallbackDirs = {
-            "immagini/menu_combo/dolci/",
-            "immagini/dolci/",
-            "immagini/menu_combo/sfiziosità/",
-            "immagini/menu_combo/sfiziosita/",
-            "immagini/sfiziosità/",
-            "immagini/sfiziosita/",
-            "immagini/menu_combo/bevande/",
-            "immagini/bevande/",
-            "immagini/menu_combo/panini/",
-            "immagini/panini/",
-            "immagini/menu_combo/",
-            "immagini/"
+            "immagini/menu_combo/dolci/", "immagini/dolci/",
+            "immagini/menu_combo/sfiziosità/", "immagini/menu_combo/sfiziosita/",
+            "immagini/sfiziosità/", "immagini/sfiziosita/",
+            "immagini/menu_combo/bevande/", "immagini/bevande/",
+            "immagini/menu_combo/panini/", "immagini/panini/",
+            "immagini/menu_combo/", "immagini/"
         };
 
         for (String dir : fallbackDirs) {
@@ -293,30 +256,12 @@ public class ClientPanel extends JPanel {
         return path;
     }
 
-    /**
-     * Costruisce un pannello vuoto utile come schermata di benvenuto o segnaposto.
-     *
-     * @return Il pannello vuoto.
-     */
     private JPanel creaPannelloVuoto() {
         JPanel p = new JPanel(new BorderLayout());
         p.setBackground(COLOR_BG);
         return p;
     }
 
-    /**
-     * Costruisce dinamicamente un pannello con una griglia di prodotti acquistabili.
-     * Genera card visive per ogni prodotto passato come parametro.
-     *
-     * @param nomi     Gli array di nomi dei prodotti.
-     * @param ids      Gli array di ID corrispondenti nel catalogo.
-     * @param prezzi   Gli array dei prezzi di base.
-     * @param imgPaths Gli array dei percorsi per le immagini.
-     * @param isCombo  Variabile booleana che definisce se i prodotti della griglia sono dei menu (comportamento extra).
-     * @param imgW     Larghezza in pixel per scalare le immagini.
-     * @param imgH     Altezza in pixel per scalare le immagini.
-     * @return Il pannello grid scrollabile.
-     */
     private JPanel creaGrigliaProdotti(String[] nomi, String[] ids, double[] prezzi, String[] imgPaths, boolean isCombo, int imgW, int imgH) {
         JPanel p = new JPanel(new BorderLayout());
         p.setBackground(COLOR_BG);
@@ -366,17 +311,10 @@ public class ClientPanel extends JPanel {
             grid.add(card);
         }
 
-        // Ora usiamo creaTouchScroll invece di new JScrollPane
         p.add(creaTouchScroll(grid), BorderLayout.CENTER);
         return p;
     }
 
-    /**
-     * Genera la prima vista di selezione guidata per i menu: scelta della bibita.
-     *
-     * @param imgPaths Percorsi per le immagini delle bevande.
-     * @return Il pannello popolato con la griglia bevande.
-     */
     private JPanel creaSceltaBibitaCombo(String[] imgPaths) {
         String[] nomi = {"Acqua Naturale", "Acqua Gassata", "Coca Cola", "Coca Zero", "Sprite", "Pepsi"};
         JPanel p = new JPanel(new BorderLayout());
@@ -432,13 +370,6 @@ public class ClientPanel extends JPanel {
         return p;
     }
 
-    /**
-     * Genera la seconda vista di selezione guidata per i menu: scelta delle patatine
-     * (con possibilità di applicare personalizzazioni con sovrapprezzo).
-     *
-     * @param imgPaths Percorsi per le immagini delle patatine.
-     * @return Il pannello popolato con le scelte.
-     */
     private JPanel creaSceltaPatatineCombo(String[] imgPaths) {
         String[] nomi = {"Piccole (Incluse)", "Medie (+€1.00)", "Grandi (+€1.60)"};
         JPanel p = new JPanel(new BorderLayout());
@@ -487,7 +418,7 @@ public class ClientPanel extends JPanel {
                 else pers.add(new String[]{"Upgrade Patatine", "Piccole", "0.00"});
                 
                 chiosco.aggiungiProdotto(tempComboId, 1, pers);
-                selezionaCategoria(null, "Blank"); // Resetta le categorie e torna alla home
+                selezionaCategoria(null, "Blank");
                 aggiornaFooter();
             });
 
@@ -501,10 +432,6 @@ public class ClientPanel extends JPanel {
         return p;
     }
 
-    /**
-     * Struttura la base vuota del riepilogo dell'ordine in formato grafico.
-     * @return Il pannello che verrà poi popolato dal metodo {@link #popolaRiepilogo()}.
-     */
     private JPanel creaPannelloRiepilogo() {
         JPanel p = new JPanel(new BorderLayout());
         p.setBackground(COLOR_BG);
@@ -518,15 +445,12 @@ public class ClientPanel extends JPanel {
         panelSummaryContent = new JPanel();
         panelSummaryContent.setLayout(new BoxLayout(panelSummaryContent, BoxLayout.Y_AXIS));
         panelSummaryContent.setBackground(COLOR_BG);
+        panelSummaryContent.setBorder(new EmptyBorder(0, 0, 0, 10));
         
         p.add(creaTouchScroll(panelSummaryContent), BorderLayout.CENTER);
         return p;
     }
 
-    /**
-     * Svuota e ri-scrive l'elenco testuale di riepilogo con i prodotti contenuti 
-     * nel carrello attuale interfacciandosi con il controller.
-     */
     private void popolaRiepilogo() {
         panelSummaryContent.removeAll();
         int idx = 0;
@@ -534,23 +458,175 @@ public class ClientPanel extends JPanel {
         if(chiosco.getNumeroVociCorrenti() > 0) {
             for (VoceOrdine vo : chiosco.getVociCarrello()) {
                 JPanel row = new RoundedPanel(10, Color.WHITE);
-                row.setLayout(new BorderLayout(15, 10));
+                row.setLayout(new BorderLayout(15, 10)); 
                 row.setBorder(new EmptyBorder(15, 15, 15, 15));
-                row.setMaximumSize(new Dimension(Integer.MAX_VALUE, 120));
+                row.setMaximumSize(new Dimension(Integer.MAX_VALUE, 250)); 
 
-                StringBuilder desc = new StringBuilder("<html><span style='font-size:16px;'><b>" + vo.getQuantita() + "x " + vo.getProdotto().getNome() + "</b></span><br>");
-                for(Personalizzazione pers: vo.getPersonalizzazioni()){
-                    desc.append("<span style='font-size:12px; color:gray;'>+ ").append(pers.getIngrediente()).append("</span><br>");
+                String cat = vo.getProdotto().getCategoria();
+                String nomeProd = vo.getProdotto().getNome().toLowerCase();
+                
+                boolean isCrispy = nomeProd.contains("crispy chicken");
+                boolean isAmerican = nomeProd.contains("american burger");
+                boolean isDoubleBbq = nomeProd.contains("double bbq");
+                boolean isVeggie = nomeProd.contains("veggie burger");
+                boolean isFish = nomeProd.contains("crispy fish");
+
+                List<String> righeDescrittive = new ArrayList<>();
+                String bibita = null;
+                String patatine = null;
+                
+                List<String> ingredientiPanino = new ArrayList<>();
+                if (isCrispy) {
+                    ingredientiPanino.add("cotoletta di pollo");
+                    ingredientiPanino.add("cheddar");
+                    ingredientiPanino.add("insalata");
+                    ingredientiPanino.add("salsa barbecue");
+                    ingredientiPanino.add("salsa crispy");
+                } else if (isAmerican) {
+                    ingredientiPanino.add("doppio hamburgher");
+                    ingredientiPanino.add("cheddar");
+                    ingredientiPanino.add("insalata");
+                    ingredientiPanino.add("cetriolini");
+                } else if (isDoubleBbq) {
+                    ingredientiPanino.add("doppio hamburgher");
+                    ingredientiPanino.add("doppio cheddar");
+                    ingredientiPanino.add("cetriolini");
+                    ingredientiPanino.add("bacon");
+                    ingredientiPanino.add("salsa crispy");
+                } else if (isVeggie) {
+                    ingredientiPanino.add("hamburgher di ceci");
+                    ingredientiPanino.add("doppia insalata");
+                    ingredientiPanino.add("salsa hummus");
+                } else if (isFish) {
+                    ingredientiPanino.add("filetto di pesce fritto");
+                    ingredientiPanino.add("cheddar");
+                    ingredientiPanino.add("maionese");
                 }
-                desc.append("<span style='font-size:14px;'>Subtotale: €").append(String.format("%.2f", vo.getSubTotale())).append("</span></html>");
+
+                for(Personalizzazione pers : vo.getPersonalizzazioni()){
+                    if (pers.getTipo().equals("Bibita Combo")) {
+                        bibita = pers.getIngrediente();
+                    } else if (pers.getTipo().equals("Upgrade Patatine")) {
+                        patatine = "Patatine " + pers.getIngrediente();
+                    } else if (pers.getTipo().equals("Rimozione")) {
+                        ingredientiPanino.removeIf(ing -> ing.equalsIgnoreCase(pers.getIngrediente()));
+                    } else if (pers.getTipo().equals("Aggiunta")) {
+                        ingredientiPanino.add(pers.getIngrediente().toLowerCase());
+                    }
+                }
+
+                if (cat.equals("Menu Combo")) {
+                    if (bibita != null) {
+                        String b = bibita.equalsIgnoreCase("Acqua Naturale") ? "acqua" : bibita.toLowerCase();
+                        righeDescrittive.add(b);
+                    }
+                    if (patatine != null) {
+                        righeDescrittive.add(patatine.toLowerCase());
+                    }
+                }
+
+                if (isCrispy) {
+                    righeDescrittive.add("panino crispy chicken con: " + String.join(", ", ingredientiPanino));
+                } else if (isAmerican) {
+                    righeDescrittive.add("panino american burger con: " + String.join(", ", ingredientiPanino));
+                } else if (isDoubleBbq) {
+                    righeDescrittive.add("panino double bbq con: " + String.join(", ", ingredientiPanino));
+                } else if (isVeggie) {
+                    righeDescrittive.add("panino veggie burger con: " + String.join(", ", ingredientiPanino));
+                } else if (isFish) {
+                    righeDescrittive.add("panino crispy fish con: " + String.join(", ", ingredientiPanino));
+                } else {
+                    for(Personalizzazione pers : vo.getPersonalizzazioni()){
+                        if (!pers.getTipo().equals("Bibita Combo") && !pers.getTipo().equals("Upgrade Patatine")) {
+                            righeDescrittive.add(pers.getTipo().toLowerCase() + " " + pers.getIngrediente().toLowerCase());
+                        }
+                    }
+                }
+
+                StringBuilder desc = new StringBuilder("<html><span style='font-size:18px;'><b>" + vo.getProdotto().getNome() + "</b></span><br>");
+                for (String riga : righeDescrittive) {
+                    desc.append("<span style='font-size:14px; color:gray;'>- ").append(riga).append("</span><br>");
+                }
+                desc.append("<span style='font-size:16px;'>Subtotale: €").append(String.format("%.2f", vo.getSubTotale())).append("</span></html>");
 
                 JLabel lblDesc = new JLabel(desc.toString());
                 lblDesc.setForeground(Color.BLACK);
+                lblDesc.setVerticalAlignment(SwingConstants.CENTER);
+
+                JPanel actionPanel = new JPanel();
+                actionPanel.setLayout(new BoxLayout(actionPanel, BoxLayout.Y_AXIS));
+                actionPanel.setOpaque(false);
+                actionPanel.setPreferredSize(new Dimension(180, 160));
+                actionPanel.setMinimumSize(new Dimension(180, 160));
+                actionPanel.setMaximumSize(new Dimension(180, 250));
+
+                JPanel pnlQuantita = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
+                pnlQuantita.setOpaque(false);
+                pnlQuantita.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+                RoundedButton btnMeno = new RoundedButton("-", COLOR_YELLOW, Color.BLACK, 15);
+                btnMeno.setPreferredSize(new Dimension(60, 40));
+                btnMeno.setFont(new Font("SansSerif", Font.BOLD, 18));
+                btnMeno.setMargin(new Insets(0, 0, 0, 0));
+
+                JLabel lblQta = new JLabel(String.valueOf(vo.getQuantita()), SwingConstants.CENTER);
+                lblQta.setFont(new Font("SansSerif", Font.BOLD, 20));
+                lblQta.setPreferredSize(new Dimension(30, 40));
+                lblQta.setForeground(Color.BLACK);
+
+                RoundedButton btnPiu = new RoundedButton("+", COLOR_YELLOW, Color.BLACK, 15);
+                btnPiu.setPreferredSize(new Dimension(60, 40));
+                btnPiu.setFont(new Font("SansSerif", Font.BOLD, 18));
+                btnPiu.setMargin(new Insets(0, 0, 0, 0));
+
+                final int currentIdx = idx;
+
+                btnMeno.addActionListener(e -> {
+                    if (vo.getQuantita() > 1) {
+                        chiosco.aggiornaQuantitaVoce(currentIdx, vo.getQuantita() - 1);
+                        popolaRiepilogo();
+                        aggiornaFooter();
+                    }
+                });
+
+                btnPiu.addActionListener(e -> {
+                    chiosco.aggiornaQuantitaVoce(currentIdx, vo.getQuantita() + 1);
+                        popolaRiepilogo();
+                        aggiornaFooter();
+                });
+
+                pnlQuantita.add(btnMeno);
+                pnlQuantita.add(lblQta);
+                pnlQuantita.add(btnPiu);
+
+                actionPanel.add(pnlQuantita);
+                actionPanel.add(Box.createRigidArea(new Dimension(0, 8))); 
+
+                if (cat.equals("Panino") || cat.equals("Menu Combo")) {
+                    RoundedButton btnModifica = new RoundedButton("Modifica", COLOR_GREEN, Color.WHITE, 15);
+                    btnModifica.setPreferredSize(new Dimension(140, 40)); 
+                    btnModifica.setMaximumSize(new Dimension(140, 40));
+                    btnModifica.setFont(new Font("SansSerif", Font.BOLD, 14));
+                    btnModifica.setAlignmentX(Component.CENTER_ALIGNMENT);
+                    btnModifica.setMargin(new Insets(0, 0, 0, 0));
+                    btnModifica.addActionListener(e -> apriSchermataModifica(currentIdx, vo));
+                    
+                    actionPanel.add(btnModifica);
+                    actionPanel.add(Box.createRigidArea(new Dimension(0, 8))); 
+                } else {
+                    JLabel placeholder = new JLabel();
+                    placeholder.setPreferredSize(new Dimension(140, 48));
+                    placeholder.setMaximumSize(new Dimension(140, 48));
+                    actionPanel.add(placeholder);
+                }
 
                 RoundedButton btnElimina = new RoundedButton("Elimina", COLOR_RED, Color.WHITE, 15);
-                btnElimina.setPreferredSize(new Dimension(120, 50));
+                btnElimina.setPreferredSize(new Dimension(140, 40)); 
+                btnElimina.setMaximumSize(new Dimension(140, 40));
+                btnElimina.setFont(new Font("SansSerif", Font.BOLD, 14));
+                btnElimina.setAlignmentX(Component.CENTER_ALIGNMENT);
+                btnElimina.setMargin(new Insets(0, 0, 0, 0));
                 
-                final int currentIdx = idx;
                 btnElimina.addActionListener(e -> {
                     JDialog dialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Conferma", true);
                     dialog.setSize(400, 200);
@@ -586,8 +662,10 @@ public class ClientPanel extends JPanel {
                     dialog.setVisible(true);
                 });
 
+                actionPanel.add(btnElimina);
+
                 row.add(lblDesc, BorderLayout.CENTER);
-                row.add(btnElimina, BorderLayout.EAST);
+                row.add(actionPanel, BorderLayout.EAST);
                 
                 panelSummaryContent.add(row);
                 panelSummaryContent.add(Box.createRigidArea(new Dimension(0, 15)));
@@ -598,10 +676,133 @@ public class ClientPanel extends JPanel {
         panelSummaryContent.repaint();
     }
 
-    /**
-     * Crea il form per l'inserimento dei dati di pagamento.
-     * @return Il pannello che contiene i campi della carta di credito.
-     */
+    private void apriSchermataModifica(int index, VoceOrdine vo) {
+        pannelloModificaContainer.removeAll();
+
+        String nomeProd = vo.getProdotto().getNome().toLowerCase();
+        
+        boolean isCrispy = nomeProd.contains("crispy chicken");
+        boolean isAmerican = nomeProd.contains("american burger");
+        boolean isDoubleBbq = nomeProd.contains("double bbq");
+        boolean isVeggie = nomeProd.contains("veggie burger");
+        boolean isFish = nomeProd.contains("crispy fish");
+
+        if (!isCrispy && !isAmerican && !isDoubleBbq && !isVeggie && !isFish) {
+            mostraErroreTouch("La modifica per questo prodotto\nnon e' ancora disponibile.");
+            return;
+        }
+
+        JLabel lblTitolo = new JLabel("MODIFICA INGREDIENTI", SwingConstants.CENTER);
+        lblTitolo.setFont(new Font("SansSerif", Font.BOLD, 28));
+        lblTitolo.setForeground(Color.BLACK);
+        lblTitolo.setBorder(new EmptyBorder(20, 0, 10, 0));
+
+        String descText = "";
+        String[] ingredienti = null;
+
+        if (isCrispy) {
+            descText = "Cotoletta di pollo, cheddar, insalata, salsa barbecue e salsa crispy";
+            ingredienti = new String[]{"Insalata", "Cheddar", "Salsa Barbecue", "Salsa Crispy"};
+        } else if (isAmerican) {
+            descText = "Doppio hamburgher, cheddar, insalata e cetriolini";
+            ingredienti = new String[]{"Cheddar", "Insalata", "Cetriolini"};
+        } else if (isDoubleBbq) {
+            descText = "Doppio hamburgher, doppio cheddar, cetriolini, bacon e salsa crispy";
+            ingredienti = new String[]{"Cheddar", "Cetriolini", "Bacon", "Salsa Crispy"};
+        } else if (isVeggie) {
+            descText = "Hamburgher di ceci, doppia insalata e salsa hummus";
+            ingredienti = new String[]{"Doppia Insalata", "Salsa Hummus"};
+        } else if (isFish) {
+            descText = "Filetto di pesce fritto, cheddar e maionese";
+            ingredienti = new String[]{"Cheddar", "Maionese"};
+        }
+
+        JLabel lblDesc = new JLabel(descText, SwingConstants.CENTER);
+        lblDesc.setFont(new Font("SansSerif", Font.ITALIC, 18));
+        lblDesc.setForeground(Color.DARK_GRAY);
+        lblDesc.setBorder(new EmptyBorder(0, 0, 30, 0));
+
+        JPanel centerTop = new JPanel(new BorderLayout());
+        centerTop.setOpaque(false);
+        centerTop.add(lblTitolo, BorderLayout.NORTH);
+        centerTop.add(lblDesc, BorderLayout.SOUTH);
+
+        JPanel listPanel = new JPanel();
+        listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
+        listPanel.setOpaque(false);
+
+        List<String[]> daMantenere = new ArrayList<>(); 
+        List<String> rimossiAttualmente = new ArrayList<>();
+
+        for(Personalizzazione p : vo.getPersonalizzazioni()) {
+            if (p.getTipo().equals("Rimozione")) {
+                rimossiAttualmente.add(p.getIngrediente());
+            } else {
+                daMantenere.add(new String[]{p.getTipo(), p.getIngrediente(), String.valueOf(p.getSovrapprezzo())});
+            }
+        }
+
+        List<String> nuoviRimossi = new ArrayList<>(rimossiAttualmente);
+
+        for (String ingr : ingredienti) {
+            JPanel row = new RoundedPanel(10, Color.WHITE);
+            row.setLayout(new BorderLayout(15, 10));
+            row.setBorder(new EmptyBorder(10, 30, 10, 30)); 
+            row.setMaximumSize(new Dimension(800, 70));
+
+            JLabel lIngr = new JLabel(ingr);
+            lIngr.setFont(new Font("SansSerif", Font.BOLD, 20));
+            lIngr.setForeground(Color.BLACK);
+            row.add(lIngr, BorderLayout.CENTER);
+
+            boolean isRimosso = nuoviRimossi.contains(ingr);
+            RoundedButton btnToggle = new RoundedButton(
+                isRimosso ? "Aggiungi" : "Elimina",
+                isRimosso ? COLOR_GREEN : COLOR_RED,
+                Color.WHITE, 18
+            );
+            btnToggle.setPreferredSize(new Dimension(140, 45));
+
+            btnToggle.addActionListener(e -> {
+                if (btnToggle.getText().equals("Elimina")) {
+                    btnToggle.setText("Aggiungi");
+                    btnToggle.setButtonColor(COLOR_GREEN, Color.WHITE);
+                    nuoviRimossi.add(ingr);
+                } else {
+                    btnToggle.setText("Elimina");
+                    btnToggle.setButtonColor(COLOR_RED, Color.WHITE);
+                    nuoviRimossi.remove(ingr);
+                }
+            });
+
+            row.add(btnToggle, BorderLayout.EAST);
+            listPanel.add(row);
+            listPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+        }
+
+        RoundedButton btnConferma = new RoundedButton("CONFERMA MODIFICHE", COLOR_YELLOW, Color.BLACK, 25);
+        btnConferma.setPreferredSize(new Dimension(350, 60));
+        btnConferma.addActionListener(e -> {
+            List<String[]> nuovePers = new ArrayList<>(daMantenere);
+            for(String r : nuoviRimossi) {
+                nuovePers.add(new String[]{"Rimozione", r, "0.0"});
+            }
+            chiosco.aggiornaPersonalizzazioniVoce(index, nuovePers);
+            switchView("Summary"); 
+        });
+
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        bottomPanel.setOpaque(false);
+        bottomPanel.setBorder(new EmptyBorder(30, 0, 20, 0));
+        bottomPanel.add(btnConferma);
+
+        pannelloModificaContainer.add(centerTop, BorderLayout.NORTH);
+        pannelloModificaContainer.add(creaTouchScroll(listPanel), BorderLayout.CENTER);
+        pannelloModificaContainer.add(bottomPanel, BorderLayout.SOUTH);
+
+        switchView("Modifica");
+    }
+
     private JPanel creaPannelloPagamento() {
         JPanel p = new JPanel(new BorderLayout());
         p.setBackground(COLOR_BG);
@@ -627,14 +828,6 @@ public class ClientPanel extends JPanel {
         return p;
     }
 
-    /**
-     * Genera un singolo campo di testo configurato per simulare una tastiera virtuale touch
-     * al click dell'utente, mascherando e validando la lunghezza massima di inserimento.
-     *
-     * @param placeholder Messaggio mostrato a vuoto.
-     * @param maxLen      Lunghezza massima di caratteri ammessi per il campo.
-     * @return L'oggetto {@code JTextField} predisposto.
-     */
     private JTextField creaCampoPagamento(String placeholder, int maxLen) {
         JTextField tf = new JTextField(placeholder);
         tf.setFont(new Font("SansSerif", Font.BOLD, 28));
@@ -642,11 +835,10 @@ public class ClientPanel extends JPanel {
         tf.setEditable(false);
         tf.setBackground(Color.WHITE);
         tf.setForeground(Color.GRAY);
-        // Cursore touch per input testo
         tf.setCursor(new Cursor(Cursor.HAND_CURSOR));
         
-        tf.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+        tf.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 String input = apriTastierinoTouch("Inserisci " + placeholder, maxLen);
                 if(input != null && !input.isEmpty()) {
                     tf.setForeground(Color.BLACK);
@@ -659,17 +851,6 @@ public class ClientPanel extends JPanel {
         return tf;
     }
 
-    // ==========================================
-    // FOOTER E TRANSIZIONI 
-    // ==========================================
-
-    /**
-     * Crea il footer persistente presente nella schermata. 
-     * Contiene tasti di navigazione (indietro/avanti), riassunto prodotti (tramite badge)
-     * e totale temporaneo.
-     *
-     * @return Il pannello Footer.
-     */
     private JPanel creaFooter() {
         footerPanel = new RoundedPanel(30, Color.WHITE);
         footerPanel.setLayout(new BorderLayout());
@@ -687,6 +868,7 @@ public class ClientPanel extends JPanel {
         btnIndietro.setVisible(false);
         btnIndietro.addActionListener(e -> {
             if(currentView.equals("Payment")) switchView("Summary");
+            else if (currentView.equals("Modifica")) switchView("Summary"); 
             else {
                 selezionaCategoria(null, "Blank");
             }
@@ -717,7 +899,6 @@ public class ClientPanel extends JPanel {
         btnAvantiPaga.setPreferredSize(new Dimension(160, 50));
         btnAvantiPaga.setVisible(false);
         btnAvantiPaga.addActionListener(e -> {
-            // Deseleziona le categorie di sinistra se naviga nel riepilogo
             RoundedButton[] btns = {btnMenuCompleto, btnPanini, btnSfiziosita, btnBibite, btnDolci};
             for (RoundedButton b : btns) b.setButtonColor(COLOR_YELLOW, Color.BLACK);
 
@@ -734,11 +915,6 @@ public class ClientPanel extends JPanel {
         return footerPanel;
     }
 
-    /**
-     * Alterna la view (carta) del pannello principale per gestire la navigazione utente.
-     *
-     * @param viewName Nome della carta da portare in foreground (es. "Summary" o "CatPanini").
-     */
     private void switchView(String viewName) {
         currentView = viewName;
         if(viewName.equals("Summary")) popolaRiepilogo();
@@ -746,10 +922,6 @@ public class ClientPanel extends JPanel {
         aggiornaFooter();
     }
 
-    /**
-     * Analizza lo stato dell'ordine e modifica coerentemente i testi, la visibilità
-     * e il colore dei bottoni del footer.
-     */
     private void aggiornaFooter() {
         int count = chiosco.getNumeroVociCorrenti();
         double totale = chiosco.getTotaleOrdineCorrente();
@@ -765,34 +937,31 @@ public class ClientPanel extends JPanel {
             badgePanel.setText(String.valueOf(count));
             badgePanel.setVisible(true);
             lblPrezzoTotale.setText(String.format("%.2f€", totale));
-            btnAvantiPaga.setVisible(true);
-
-            if (currentView.equals("Summary")) {
+            
+            if (currentView.equals("Modifica")) {
                 btnIndietro.setVisible(true);
-                btnAvantiPaga.setText("Paga");
-                btnAvantiPaga.setButtonColor(COLOR_GREEN, Color.WHITE);
-            } else if (currentView.equals("Payment")) {
-                btnIndietro.setVisible(true);
-                btnAvantiPaga.setText("Conferma");
-                btnAvantiPaga.setButtonColor(COLOR_GREEN, Color.WHITE);
+                btnAvantiPaga.setVisible(false); 
             } else {
-                btnIndietro.setVisible(false);
-                btnAvantiPaga.setText("Avanti >");
-                btnAvantiPaga.setButtonColor(COLOR_YELLOW, Color.BLACK);
+                btnAvantiPaga.setVisible(true);
+                if (currentView.equals("Summary")) {
+                    btnIndietro.setVisible(true);
+                    btnAvantiPaga.setText("Paga");
+                    btnAvantiPaga.setButtonColor(COLOR_GREEN, Color.WHITE);
+                } else if (currentView.equals("Payment")) {
+                    btnIndietro.setVisible(true);
+                    btnAvantiPaga.setText("Conferma");
+                    btnAvantiPaga.setButtonColor(COLOR_GREEN, Color.WHITE);
+                } else {
+                    btnIndietro.setVisible(false);
+                    btnAvantiPaga.setText("Avanti >");
+                    btnAvantiPaga.setButtonColor(COLOR_YELLOW, Color.BLACK);
+                }
             }
         }
         footerPanel.revalidate();
         footerPanel.repaint();
     }
 
-    // ==========================================
-    // LOGICA PAGAMENTO E FORMATTAZIONE
-    // ==========================================
-    
-    /**
-     * Processa le informazioni inserite, valida la lunghezza, interroga il controller
-     * per chiudere e pagare l'ordine e se andato a buon fine, resetta la UI per il prossimo cliente.
-     */
     private void eseguiPagamentoDefinitivo() {
         if (rawCarta.length() != 16 || rawScadenza.length() != 4 || rawCVV.length() != 3) {
             mostraErroreTouch("Compila tutti i campi\ncorrettamente!");
@@ -804,7 +973,6 @@ public class ClientPanel extends JPanel {
         
         mostraMessaggioTouch("ESITO TRANSAZIONE", esito);
         
-        // Reset totale
         chiosco.iniziaOrdine();
         rawCarta = ""; rawScadenza = ""; rawCVV = "";
         txtCarta.setText("Numero Carta (16 cifre)");
@@ -821,11 +989,6 @@ public class ClientPanel extends JPanel {
         }
     }
 
-    /**
-     * Formatta il valore inserito con la spaziatura tipica delle carte (blocchi da 4).
-     * @param raw La stringa da formattare.
-     * @return La stringa separata da trattini.
-     */
     private String formattaCarta(String raw) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < raw.length(); i++) {
@@ -835,24 +998,11 @@ public class ClientPanel extends JPanel {
         return sb.toString();
     }
 
-    /**
-     * Formatta una data di scadenza (es. "1224" diventa "12/24").
-     * @param raw La stringa a 4 caratteri.
-     * @return La stringa con lo slash intermedio.
-     */
     private String formattaScadenza(String raw) {
         if(raw.length() > 2) return raw.substring(0, 2) + "/" + raw.substring(2);
         return raw;
     }
 
-    /**
-     * Lancia la finestra modale contenente il tastierino numerico a schermo, utile 
-     * per dispositivi senza tastiera fisica.
-     *
-     * @param titolo    Titolo della Dialog.
-     * @param maxLength Lunghezza massima del dato per fermare l'input visivo.
-     * @return Il contenuto della stringa al momento della pressione di 'OK'.
-     */
     private String apriTastierinoTouch(String titolo, int maxLength) {
         JDialog dialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), titolo, true);
         dialog.setSize(450, 600);
@@ -910,12 +1060,6 @@ public class ClientPanel extends JPanel {
         return result[0];
     }
 
-    /**
-     * Mostra una finestra di avviso modale con uno stile coerente a tutto il progetto.
-     *
-     * @param titolo    Titolo dell'alert.
-     * @param messaggio Testo dell'alert. Supporta newline `\n`.
-     */
     private void mostraMessaggioTouch(String titolo, String messaggio) {
         JDialog dialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), titolo, true);
         dialog.setSize(500, 300);
@@ -942,11 +1086,6 @@ public class ClientPanel extends JPanel {
         dialog.setVisible(true);
     }
 
-    /**
-     * Wrapper semplificato per esporre a schermo errori in fase di pagamento o simili.
-     *
-     * @param msg Il messaggio di errore.
-     */
     private void mostraErroreTouch(String msg) {
         mostraMessaggioTouch("ERRORE", msg);
     }

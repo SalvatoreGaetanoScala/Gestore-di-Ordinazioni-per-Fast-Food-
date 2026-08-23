@@ -6,57 +6,50 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * La classe {@code MainGUI} rappresenta l'entry point (punto di ingresso) dell'applicazione.
- * Si occupa di inizializzare il controller principale ({@link Chiosco}) e di configurare
- * il contenitore grafico principale ({@link JFrame}), al cui interno vengono caricati i pannelli
- * del cliente ({@link ClientPanel}) e della cucina ({@link KitchenPanel}) mediante schede (tabs).
+ * Classe principale di avvio dell'applicazione.
+ * Assembla il Controller (Chiosco) e le Viste (ClientPanel, KitchenPanel, ManagerPanel).
  */
-public class MainGUI extends JFrame {
-    private Chiosco chiosco;
-    private ClientPanel clientPanel;
-    private KitchenPanel kitchenPanel;
+public class MainGUI {
 
-    /**
-     * Costruttore della classe {@code MainGUI}.
-     * Configura le dimensioni della finestra, inizializza le classi controller
-     * e collega i pannelli dell'interfaccia utente.
-     */
-    public MainGUI() {
-        // Inizializza il sistema MVC come richiesto
-        chiosco = new Chiosco();
-        chiosco.iniziaOrdine();
-
-        setTitle("Kiosk Fast Food - Self Service");
-        setSize(1280, 850);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
-
-        // Separiamo le responsabilità: la Cucina riceve il Controller
-        kitchenPanel = new KitchenPanel(chiosco);
-        
-        // Passiamo a ClientPanel un'azione (Runnable) per aggiornare la cucina dopo il pagamento
-        clientPanel = new ClientPanel(chiosco, () -> kitchenPanel.aggiornaCode());
-
-        // Aggiunta componenti al frame
-        JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.setFont(new Font("SansSerif", Font.BOLD, 18));
-        tabbedPane.addTab("CHIOSCO (Ordina Qui)", clientPanel);
-        tabbedPane.addTab("CUCINA (Back-Office)", kitchenPanel);
-
-        add(tabbedPane);
-    }
-
-    /**
-     * Metodo {@code main} eseguibile per l'avvio dell'applicazione.
-     * Applica il Look & Feel di sistema e rende visibile la finestra principale.
-     *
-     * @param args Argomenti da riga di comando (non utilizzati).
-     */
     public static void main(String[] args) {
-        // Applica il look and feel del sistema per adattarsi (es. MacOS/Windows)
-        try { UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); } 
-        catch (Exception e) { e.printStackTrace(); }
+        
+        // Avvio dell'interfaccia grafica in modo thread-safe
+        SwingUtilities.invokeLater(() -> {
+            
+            // 1. Inizializzazione del Controller (Dominio)
+            Chiosco chiosco = new Chiosco();
 
-        SwingUtilities.invokeLater(() -> new MainGUI().setVisible(true));
+            // 2. Creazione del Frame principale
+            JFrame frame = new JFrame("Gestore Ordinazioni Fast Food - Terminali");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(1200, 800);
+            frame.setLocationRelativeTo(null); // Centra la finestra
+            
+            // 3. Creazione del pannello a schede (TabbedPane)
+            JTabbedPane tabbedPane = new JTabbedPane();
+            tabbedPane.setFont(new Font("SansSerif", Font.BOLD, 16));
+
+            // 4. Creazione delle tre Viste passando il controller
+            
+            // A. Pannello Cliente (UC1) - Passo anche una lambda per aggiornare la cucina post-pagamento
+            KitchenPanel pannelloCucina = new KitchenPanel(chiosco);
+            
+            ClientPanel pannelloCliente = new ClientPanel(chiosco, () -> {
+                // Callback: quando un ordine viene pagato, aggiorno la vista della cucina
+                pannelloCucina.aggiornaCoda();
+            });
+            
+            // B. Pannello Manager (UC5)
+            ManagerPanel pannelloManager = new ManagerPanel(chiosco);
+
+            // 5. Aggiunta dei tab
+            tabbedPane.addTab(" 🍔 Kiosk Cliente (Ordina qui) ", pannelloCliente);
+            tabbedPane.addTab(" 👨‍🍳 Terminale Cucina ", pannelloCucina);
+            tabbedPane.addTab(" 📊 Back-Office Manager ", pannelloManager);
+
+            // 6. Mostra l'applicazione
+            frame.add(tabbedPane);
+            frame.setVisible(true);
+        });
     }
 }
