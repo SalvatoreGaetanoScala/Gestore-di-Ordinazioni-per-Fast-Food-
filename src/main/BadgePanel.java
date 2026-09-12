@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * La classe {@code BadgePanel} disegna un piccolo cerchio contenente un numero
+ * la classe {@code BadgePanel} disegna un piccolo cerchio contenente un numero
  * in stile notifica/badge, molto usato per indicare le quantità nel carrello.
  */
 public class BadgePanel extends JPanel {
@@ -12,9 +12,9 @@ public class BadgePanel extends JPanel {
     private final Color COLOR_RED = new Color(218, 41, 28);
 
     /**
-     * Costruttore della classe.
+     * costruttore della classe.
      *
-     * @param text La stringa da mostrare all'interno del badge.
+     * @param text -> la stringa da mostrare all'interno del badge.
      */
     public BadgePanel(String text) {
         this.text = text;
@@ -23,8 +23,8 @@ public class BadgePanel extends JPanel {
     }
     
     /**
-     * Aggiorna il testo e forza un ridisegno grafico del componente.
-     * @param text Il nuovo testo da renderizzare.
+     * aggiorna il testo e forza un ridisegno grafico del componente.
+     * @param text -> il nuovo testo da renderizzare.
      */
     public void setText(String text) { 
         this.text = text; 

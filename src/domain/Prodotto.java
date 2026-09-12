@@ -1,8 +1,8 @@
 package domain;
 
 /**
- * La classe {@code Prodotto} rappresenta un elemento in vendita all'interno del catalogo.
- * È una classe contenitore per i dettagli anagrafici e il prezzo di listino.
+ * la classe {@code Prodotto} rappresenta un elemento in vendita all'interno del catalogo,
+ * è una classe contenitore per i dettagli anagrafici e il prezzo di listino.
  */
 public class Prodotto {
     private String idProdotto;
@@ -11,12 +11,12 @@ public class Prodotto {
     private String categoria;
 
     /**
-     * Costruttore della classe.
+     * costruttore della classe.
      *
-     * @param idProdotto Identificativo univoco del prodotto nel database.
-     * @param nome       Nome mostrato all'utente.
-     * @param prezzoBase Prezzo di partenza del prodotto senza personalizzazioni.
-     * @param categoria  Categoria merceologica di appartenenza (es. "Panini", "Bevande").
+     * @param idProdotto -> identificativo univoco del prodotto nel database.
+     * @param nome       -> nome mostrato all'utente.
+     * @param prezzoBase -> prezzo di partenza del prodotto senza personalizzazioni.
+     * @param categoria  -> categoria merceologica di appartenenza (es. "Panini", "Bevande").
      */
     public Prodotto(String idProdotto, String nome, double prezzoBase, String categoria) {
         this.idProdotto = idProdotto;
@@ -25,15 +25,15 @@ public class Prodotto {
         this.categoria = categoria;
     }
 
-    /** @return L'ID del prodotto. */
+    /** @return l'ID del prodotto. */
     public String getIdProdotto() { return idProdotto; }
     
-    /** @return Il nome del prodotto. */
+    /** @return il nome del prodotto. */
     public String getNome() { return nome; }
     
-    /** @return Il prezzo di base. */
+    /** @return il prezzo di base. */
     public double getPrezzoBase() { return prezzoBase; }
     
-    /** @return La categoria di appartenenza. */
+    /** @return la categoria di appartenenza. */
     public String getCategoria() { return categoria; }
 }

@@ -21,12 +21,12 @@ public class ManagerPanel extends JPanel {
         setBackground(new Color(245, 245, 245));
         setBorder(new EmptyBorder(30, 50, 30, 50));
 
-        // --- TITOLO ---
+        // ---##TITOLO 
         JLabel lblTitolo = new JLabel("BACK-OFFICE MANAGER", SwingConstants.CENTER);
         lblTitolo.setFont(new Font("SansSerif", Font.BOLD, 28));
         add(lblTitolo, BorderLayout.NORTH);
 
-        // --- AREA REPORT ---
+        // ---##AREA REPORT 
         txtReport = new JTextArea();
         txtReport.setFont(new Font("Monospaced", Font.BOLD, 18));
         txtReport.setEditable(false);
@@ -37,7 +37,7 @@ public class ManagerPanel extends JPanel {
         scrollPane.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
         add(scrollPane, BorderLayout.CENTER);
 
-        // --- BOTTONE GENERA ---
+        // ---##BOTTONE GENERA  
         JPanel pnlBottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
         pnlBottom.setOpaque(false);
         
@@ -47,7 +47,8 @@ public class ManagerPanel extends JPanel {
         btnGenera.setPreferredSize(new Dimension(400, 50));
         
         btnGenera.addActionListener(e -> {
-            // Modificato con "this.chiosco" per usare correttamente la variabile di istanza
+            // modificato con this.chiosco per usare correttamente 
+            // la variabile di istanza
             String report = this.chiosco.generaReport();
             txtReport.setText(report);
         });

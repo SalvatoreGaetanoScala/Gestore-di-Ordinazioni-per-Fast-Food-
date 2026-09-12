@@ -1,7 +1,7 @@
 package domain;
 
 /**
- * La classe {@code Personalizzazione} definisce una variazione applicata a un prodotto
+ * la classe {@code Personalizzazione} definisce una variazione applicata a un prodotto
  * specifico (ad esempio l'aggiunta di un ingrediente) e l'eventuale costo aggiuntivo.
  */
 public class Personalizzazione {
@@ -12,9 +12,9 @@ public class Personalizzazione {
     /**
      * Costruttore per creare una personalizzazione.
      *
-     * @param tipo         Il tipo di operazione (es. "Aggiunta", "Rimozione").
-     * @param ingrediente  Il nome dell'ingrediente interessato dalla modifica.
-     * @param sovrapprezzo Il costo extra applicato per questa personalizzazione.
+     * @param tipo    ->     il tipo di operazione (es. "Aggiunta", "Rimozione").
+     * @param ingrediente  ->  il nome dell'ingrediente interessato dalla modifica.
+     * @param sovrapprezzo ->  il costo extra applicato per questa personalizzazione.
      */
     public Personalizzazione(String tipo, String ingrediente, double sovrapprezzo) {
         this.tipo = tipo;
@@ -22,19 +22,19 @@ public class Personalizzazione {
         this.sovrapprezzo = sovrapprezzo;
     }
 
-    /** @return Il costo aggiuntivo relativo a questa personalizzazione. */
+    /** @return il costo aggiuntivo relativo a questa personalizzazione. */
     public double getSovrapprezzo() { return sovrapprezzo; }
     
-    /** @return Il tipo di personalizzazione ("Aggiunta", "Rimozione", ecc.). */
+    /** @return il tipo di personalizzazione ("Aggiunta", "Rimozione", ecc.). */
     public String getTipo() { return tipo; }
     
-    /** @return Il nome dell'ingrediente modificato. */
+    /** @return il nome dell'ingrediente modificato. */
     public String getIngrediente() { return ingrediente; }
     
     /**
-     * Restituisce una rappresentazione testuale della personalizzazione.
+     * qui restituisce una rappresentazione testuale della personalizzazione.
      *
-     * @return Una stringa leggibile (es. "Aggiunta Bacon (+€1.5)").
+     * @return una stringa leggibile (es. "Aggiunta Bacon (+€1.5)").
      */
     @Override
     public String toString() {

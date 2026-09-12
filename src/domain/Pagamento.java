@@ -2,7 +2,7 @@ package domain;
 import java.util.Date;
 
 /**
- * La classe {@code Pagamento} traccia i dati relativi alla transazione economica
+ * la classe {@code Pagamento} traccia i dati relativi alla transazione economica
  * per un determinato ordine.
  */
 public class Pagamento {
@@ -11,10 +11,11 @@ public class Pagamento {
     private Date dataOra;
 
     /**
-     * Costruttore della classe.
+     * costruttore della classe.
      *
-     * @param importo L'importo addebitato.
-     * @param esito   Il risultato della transazione ({@code true} se approvato, {@code false} altrimenti).
+     * @param importo -> l'importo addebitato.
+     * @param esito  ->  il risultato della transazione , 
+     *  cioè {@code true} se approvato,  {@code false} altrimenti.
      */
     public Pagamento(double importo, boolean esito) {
         this.importo = importo;
@@ -25,9 +26,9 @@ public class Pagamento {
     /** @return {@code true} se il pagamento è andato a buon fine, {@code false} altrimenti. */
     public boolean isEsitoPositivo() { return esito; }
     
-    /** @return L'importo della transazione. */
+    /** @return l'importo della transazione. */
     public double getImporto() { return importo; }
     
-    /** @return La data e l'ora in cui è stato registrato il pagamento. */
+    /** @return la data e l'ora in cui è stato registrato il pagamento. */
     public Date getDataOra() { return dataOra; }
 }

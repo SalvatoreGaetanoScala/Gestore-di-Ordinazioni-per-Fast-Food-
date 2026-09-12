@@ -2,12 +2,13 @@ package services;
 
 import domain.Ordine;
 import domain.Personalizzazione;
+import domain.StatoOrdine; //  import aggiunto per gestire lo stato come Enum
 import domain.VoceOrdine;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * La classe {@code CodaCucina} gestisce la lista degli ordini in coda di elaborazione 
+ * la classe {@code CodaCucina} gestisce la lista degli ordini in coda di elaborazione 
  * per il personale di cucina, monitorandone lo stato corrente.
  */
 public class CodaCucina {
@@ -15,29 +16,17 @@ public class CodaCucina {
     private List<String> ordiniProntiMostrati;
 
     /**
-     * Costruttore della classe {@code CodaCucina}.
-     * Inizializza le liste per gli ordini in coda e per quelli pronti già tracciati.
+     * costruttore della classe {@code CodaCucina}.
      */
     public CodaCucina() {
         this.ordiniInCoda = new ArrayList<>();
         this.ordiniProntiMostrati = new ArrayList<>();
     }
 
-    /**
-     * Inserisce un nuovo ordine all'interno della coda di cucina.
-     *
-     * @param o L'oggetto {@link Ordine} da aggiungere.
-     */
     public void aggiungiOrdine(Ordine o) {
         ordiniInCoda.add(o);
     }
 
-    /**
-     * Cerca e restituisce un ordine in base al suo identificativo alfanumerico.
-     *
-     * @param idOrdine L'ID dell'ordine da ricercare.
-     * @return L'oggetto {@link Ordine} corrispondente, oppure {@code null} se non viene trovato.
-     */
     public Ordine getOrdine(String idOrdine) {
         for (Ordine o : ordiniInCoda) {
             if (o.getIdOrdine().equalsIgnoreCase(idOrdine)) return o;
@@ -45,34 +34,30 @@ public class CodaCucina {
         return null;
     }
 
-    /**
-     * Genera una rappresentazione testuale formattata della coda ordini corrente,
-     * adatta per essere mostrata nell'interfaccia grafica del back-office.
-     * Mostra tutti i dettagli di preparazione per il personale.
-     *
-     * @return Una stringa contenente l'elenco degli ordini attivi e dei relativi dettagli.
-     */
     public String mostraCodaGUI() {
         StringBuilder sb = new StringBuilder("=== CODA CUCINA ===\n\n");
         boolean ciSonoOrdiniAttivi = false;
         
         for (Ordine o : ordiniInCoda) {
-            String stato = o.getStato();
+            // modifica -> recupero lo stato come Enum
+            StatoOrdine statoEnum = o.getStato(); 
             boolean daMostrare = false;
             
-            if (stato.equals("Pronto")) {
+            // modifica -> confronto con == grazie all'Enum
+            if (statoEnum == StatoOrdine.PRONTO) {
                 if (!ordiniProntiMostrati.contains(o.getIdOrdine())) {
                     daMostrare = true;
                     ordiniProntiMostrati.add(o.getIdOrdine());
                 }
-            } else if (!stato.equals("Ritirato")) {
+            } else if (statoEnum != StatoOrdine.RITIRATO) {
                 daMostrare = true;
             }
 
             if (daMostrare) {
                 ciSonoOrdiniAttivi = true;
+                // modifica -> uso .getDescrizione() per ottenere il testo
                 sb.append("ORDINE: ").append(o.getIdOrdine())
-                  .append(" | STATO: ").append(stato.toUpperCase()).append("\n");
+                  .append(" | STATO: ").append(statoEnum.getDescrizione().toUpperCase()).append("\n");
                 sb.append("--------------------------------------------------\n");
 
                 for (VoceOrdine vo : o.getVoci()) {

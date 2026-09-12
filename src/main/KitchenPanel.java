@@ -9,10 +9,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 /**
- * Interfaccia grafica per il personale di cucina e per il monitor sala (UC2).
- * Mostra la coda degli ordini a sinistra, il monitor a destra, e permette di 
+ * interfaccia grafica per il personale di cucina e per il monitor sala (UC2),
+ * mostra la coda degli ordini a sinistra, il monitor a destra, e permette di 
  * aggiornarne lo stato tramite un tastierino touch.
  */
+
 public class KitchenPanel extends JPanel {
     
     private static final long serialVersionUID = 1L;
@@ -34,16 +35,16 @@ public class KitchenPanel extends JPanel {
         setBackground(COLOR_BG);
         setBorder(new EmptyBorder(20, 20, 20, 20));
 
-        // --- TITOLO ---
+        // ##TITOLO ---
         JLabel lblTitolo = new JLabel("TERMINALE CUCINA - CODA ORDINI E MONITOR", SwingConstants.CENTER);
         lblTitolo.setFont(new Font("SansSerif", Font.BOLD, 28));
         add(lblTitolo, BorderLayout.NORTH);
 
-        // --- PANNELLO CENTRALE (Due Colonne) ---
+        // ## PANNELLO CENTRALE (due colonne) ---
         JPanel pnlCentro = new JPanel(new GridLayout(1, 2, 20, 0));
         pnlCentro.setBackground(COLOR_BG);
 
-        // Colonna 1: Coda Cucina (Lato Personale)
+        // colonna 1: coda cucina (lato personale)
         txtCoda = new JTextArea();
         txtCoda.setFont(new Font("Monospaced", Font.PLAIN, 16));
         txtCoda.setEditable(false);
@@ -55,10 +56,10 @@ public class KitchenPanel extends JPanel {
                              new Font("SansSerif", Font.BOLD, 14)));
         pnlCentro.add(scrollCoda);
 
-        // Colonna 2: Monitor Sala (Lato Clienti) - Testo Azzurro
+        // colonna 2: monitor sala (lato clienti) (testo azzurro)
         txtMonitor = new JTextArea();
         txtMonitor.setFont(new Font("Monospaced", Font.BOLD, 18));
-        txtMonitor.setForeground(Color.BLUE); // Colore azzurro richiesto
+        txtMonitor.setForeground(Color.BLUE); 
         txtMonitor.setEditable(false);
         txtMonitor.setBackground(Color.WHITE);
         JScrollPane scrollMonitor = new JScrollPane(txtMonitor);
@@ -70,7 +71,7 @@ public class KitchenPanel extends JPanel {
 
         add(pnlCentro, BorderLayout.CENTER);
 
-        // --- PANNELLO COMANDI (Sotto) ---
+        // ###### PANNELLO COMANDI (sotto) ---
         JPanel pnlComandi = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         pnlComandi.setOpaque(false);
 
@@ -78,11 +79,11 @@ public class KitchenPanel extends JPanel {
         lblId.setFont(new Font("SansSerif", Font.BOLD, 18));
         pnlComandi.add(lblId);
 
-        // Campo di testo con tastierino touch collegato
+        // campo di testo con tastierino touch collegato
         txtIdOrdine = new JTextField(8);
         txtIdOrdine.setFont(new Font("SansSerif", Font.BOLD, 18));
         txtIdOrdine.setHorizontalAlignment(JTextField.CENTER);
-        txtIdOrdine.setEditable(false); // Disabilitata tastiera fisica
+        txtIdOrdine.setEditable(false); // disabilitata tastiera fisica
         txtIdOrdine.setCursor(new Cursor(Cursor.HAND_CURSOR));
         txtIdOrdine.setBackground(Color.WHITE);
         
@@ -97,7 +98,7 @@ public class KitchenPanel extends JPanel {
         });
         pnlComandi.add(txtIdOrdine);
 
-        // Utilizzo RoundedButton per risolvere il bug del Mac in cui i pulsanti 
+        // utilizzo RoundedButton per risolvere il bug del Mac in cui i pulsanti 
         // colorati classici diventano bianchi/illeggibili.
         
         RoundedButton btnPrendi = new RoundedButton("Prendi in Carico", COLOR_YELLOW, Color.BLACK, 15);
@@ -122,7 +123,7 @@ public class KitchenPanel extends JPanel {
                 chiosco.segnaPronto(id);
                 aggiornaCoda();
                 
-                // AGGIUNTA: Emette l'avviso acustico richiesto dalla documentazione (UC2 e CO6)
+                // qui viene inserito l'avviso acustico richiesto dalla documentazione (UC2 e CO6)
                 Toolkit.getDefaultToolkit().beep();
                 
                 txtIdOrdine.setText("");
@@ -138,12 +139,13 @@ public class KitchenPanel extends JPanel {
 
         add(pnlComandi, BorderLayout.SOUTH);
 
-        // Popola la coda all'avvio
+        // popola la coda all'avvio
         aggiornaCoda();
     }
 
     /**
-     * Richiede al controller la stringa formattata della coda e del monitor e le stampa a video.
+     * richiede al controller la stringa formattata della coda 
+     * e del monitor e le stampa a video.
      */
     public void aggiornaCoda() {
         txtCoda.setText(chiosco.visualizzaCodaOrdini());
@@ -151,7 +153,7 @@ public class KitchenPanel extends JPanel {
     }
 
     /**
-     * Tastierino Touch Alfanumerico (QWERTY + Numeri)
+     * tastierino Touch Alfanumerico (QWERTY + Numeri)
      */
     private String apriTastierinoTouch(String titolo, int maxLength) {
         JDialog dialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), titolo, true);

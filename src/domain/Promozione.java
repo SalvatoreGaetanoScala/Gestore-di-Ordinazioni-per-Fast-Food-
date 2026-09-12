@@ -1,8 +1,8 @@
 package domain;
 
 /**
- * La classe {@code Promozione} rappresenta uno sconto applicabile a un ordine.
- * Lo sconto può essere di tipo percentuale o a valore fisso.
+ * la classe {@code Promozione} rappresenta uno sconto applicabile a un ordine,
+ * lo sconto può essere di tipo percentuale o a valore fisso.
  */
 public class Promozione {
     private String idPromozione;
@@ -11,12 +11,12 @@ public class Promozione {
     private double valore;
 
     /**
-     * Costruttore per creare una nuova promozione.
+     * costruttore per creare una nuova promozione.
      *
-     * @param idPromozione L'identificativo univoco della promozione.
-     * @param descrizione  La descrizione testuale della promozione (es. "Sconto 10%").
-     * @param tipoSconto   La tipologia di sconto applicato ("PERCENTUALE" o "FISSO").
-     * @param valore       Il valore dello sconto (es. 10.0 per il 10% o 5.0 per 5€).
+     * @param idPromozione -> identificativo univoco della promozione.
+     * @param descrizione  -> la descrizione testuale della promozione (es. "Sconto 10%").
+     * @param tipoSconto   -> la tipologia di sconto applicato ("PERCENTUALE" o "FISSO").
+     * @param valore       -> il valore dello sconto (es. 10.0 per il 10% o 5.0 per 5€).
      */
     public Promozione(String idPromozione, String descrizione, String tipoSconto, double valore) {
         this.idPromozione = idPromozione;
@@ -26,10 +26,10 @@ public class Promozione {
     }
 
     /**
-     * Applica lo sconto al totale parziale calcolato.
+     * applica lo sconto al totale parziale calcolato.
      *
-     * @param totaleAttuale Il totale su cui applicare la promozione.
-     * @return Il nuovo totale scontato. Se lo sconto fisso supera il totale, restituisce 0.
+     * @param totaleAttuale -> il totale su cui applicare la promozione.
+     * @return -> il nuovo totale scontato. Se lo sconto fisso supera il totale, restituisce 0.
      */
     public double applicaSconto(double totaleAttuale) {
         if (tipoSconto.equals("PERCENTUALE")) {
@@ -40,15 +40,15 @@ public class Promozione {
         return totaleAttuale;
     }
     
-    /** @return L'identificativo della promozione. */
+    /** @return l'identificativo della promozione. */
     public String getIdPromozione() { return idPromozione; }
     
-    /** @return La descrizione della promozione. */
+    /** @return la descrizione della promozione. */
     public String getDescrizione() { return descrizione; }
     
-    /** @return La tipologia dello sconto. */
+    /** @return la tipologia dello sconto. */
     public String getTipoSconto() { return tipoSconto; }
     
-    /** @return Il valore numerico dello sconto. */
+    /** @return il valore numerico dello sconto. */
     public double getValore() { return valore; }
 }

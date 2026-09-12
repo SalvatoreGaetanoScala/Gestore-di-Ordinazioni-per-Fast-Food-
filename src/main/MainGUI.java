@@ -6,14 +6,14 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Classe principale di avvio dell'applicazione.
- * Assembla il Controller (Chiosco) e le Viste (ClientPanel, KitchenPanel, ManagerPanel).
+ * classe principale di avvio dell'applicazione, 
+ * assembla il Controller (Chiosco) e le Viste (ClientPanel, KitchenPanel, ManagerPanel).
  */
 public class MainGUI {
 
     public static void main(String[] args) {
         
-        // Avvio dell'interfaccia grafica in modo thread-safe
+        // avvio dell'interfaccia grafica in modo thread-safe
         SwingUtilities.invokeLater(() -> {
             
             // 1. Inizializzazione del Controller (Dominio)

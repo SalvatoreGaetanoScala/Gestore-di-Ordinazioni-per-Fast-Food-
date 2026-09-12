@@ -1,10 +1,11 @@
 package services;
 
+import domain.StatoOrdine; // import aggiunto per l'Enum StatoOrdine
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * La classe {@code MonitorSala} gestisce il monitor pubblico visibile in sala 
+ * la classe {@code MonitorSala} gestisce il monitor pubblico visibile in sala 
  * per notificare i clienti quando gli ordini sono in preparazione o pronti.
  */
 public class MonitorSala {
@@ -18,19 +19,21 @@ public class MonitorSala {
     }
 
     /**
-     * Aggiorna lo stato di un ordine spostandolo nella lista corretta del monitor.
-     * Metodo richiamato dal Chiosco quando lo stato dell'ordine cambia in cucina.
+     * aggiorna lo stato di un ordine spostandolo nella lista corretta del monitor,
+     * metodo richiamato dal Chiosco quando lo stato dell'ordine cambia in cucina.
+     * 
+     * @param idOrdine -> ID dell'ordine.
+     * @param nuovoStato -> Enum che rappresenta il nuovo stato dell'ordine.
      */
-    public void aggiornaStato(String idOrdine, String nuovoStato) {
-        // Normalizziamo l'ID in modo da ignorare problemi di minuscolo/maiuscolo
+    public void aggiornaStato(String idOrdine, StatoOrdine nuovoStato) { // MODIFICA
         String idNormalized = idOrdine.trim().toUpperCase();
 
-        if (nuovoStato.equalsIgnoreCase("In Preparazione")) {
+        // modifica -> confronto pulito usando l'Enum
+        if (nuovoStato == StatoOrdine.IN_PREPARAZIONE) {
             if (!ordiniInPreparazione.contains(idNormalized)) {
                 ordiniInPreparazione.add(idNormalized);
             }
-        } else if (nuovoStato.equalsIgnoreCase("Pronto")) {
-            // Lo toglie da in preparazione e lo mette nei pronti
+        } else if (nuovoStato == StatoOrdine.PRONTO) {
             ordiniInPreparazione.remove(idNormalized);
             if (!ordiniPronti.contains(idNormalized)) {
                 ordiniPronti.add(idNormalized);
@@ -39,7 +42,7 @@ public class MonitorSala {
     }
 
     /**
-     * Costruisce la stringa formattata da mostrare nella text area azzurra.
+     * costruisce la stringa formattata da mostrare nella text area azzurra.
      */
     public String mostraMonitorGUI() {
         StringBuilder sb = new StringBuilder();

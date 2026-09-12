@@ -11,19 +11,37 @@ public class Catalogo {
         menu = new ArrayList<>();
         promozioniAttive = new ArrayList<>();
         
-        // Inserimento prodotti per i test dell'interfaccia
+        // --- INIZIO AGGIUNTA PROMOZIONE ---
+        // creazione di uno sconto percentuale del 10% di default
+        Promozione promoSconto10 = new Promozione(
+            "PROMO10", 
+            "Sconto 10% di Benvenuto", 
+            "PERCENTUALE", 10.0
+        );
+        promozioniAttive.add(promoSconto10);
+        // --- FINE AGGIUNTA PROMOZIONE ---
+        
+        // inserimento prodotti per i test dell'interfaccia
+
+        // Menu Combo
         menu.add(new Prodotto("M1", "Menu Combo Crispy Chicken", 10.0, "Menu Combo"));
         menu.add(new Prodotto("M2", "Menu Combo American Burger", 12.0, "Menu Combo"));
         menu.add(new Prodotto("M3", "Menu Combo Double BBQ", 15.0, "Menu Combo"));
         menu.add(new Prodotto("M4", "Menu Combo Veggie Burger", 8.0, "Menu Combo"));
         menu.add(new Prodotto("M5", "Menu Combo Crispy Fish", 12.0, "Menu Combo"));
         
+
+        // Prodotti singoli:
+
+        // Panini   
         menu.add(new Prodotto("P1", "Crispy Chicken", 8.0, "Panino"));
         menu.add(new Prodotto("P2", "American burger", 10.0, "Panino"));
         menu.add(new Prodotto("P3", "Double BBQ", 12.0, "Panino"));
         menu.add(new Prodotto("P4", "Veggie Burger", 7.0, "Panino"));
         menu.add(new Prodotto("P5", "Crispy Fish", 9.0, "Panino"));
         
+
+        // Sfiziosità
         menu.add(new Prodotto("S1", "Patatine Piccole", 3.0, "Sfiziosita"));
         menu.add(new Prodotto("S2", "Patatine Medie", 4.5, "Sfiziosita"));
         menu.add(new Prodotto("S3", "Patatine Grandi", 5.0, "Sfiziosita"));
@@ -32,6 +50,7 @@ public class Catalogo {
         menu.add(new Prodotto("S6", "Ali 4pz", 5.0, "Sfiziosita"));
         menu.add(new Prodotto("S7", "Ali 8pz", 6.0, "Sfiziosita"));
 
+        // Bibite
         menu.add(new Prodotto("B1", "Acqua Naturale", 1.5, "Bibita"));
         menu.add(new Prodotto("B2", "Acqua Gassata", 1.5, "Bibita"));
         menu.add(new Prodotto("B3", "Coca Cola", 3.0, "Bibita"));
@@ -39,6 +58,7 @@ public class Catalogo {
         menu.add(new Prodotto("B5", "Sprite", 2.5, "Bibita"));
         menu.add(new Prodotto("B6", "Pepsi", 3.0, "Bibita"));
 
+        // Dolci
         menu.add(new Prodotto("D1", "Cookie", 1.0, "Dolce"));
         menu.add(new Prodotto("D2", "Ciambella", 1.5, "Dolce"));
         menu.add(new Prodotto("D3", "Gelato cono", 3.5, "Dolce"));

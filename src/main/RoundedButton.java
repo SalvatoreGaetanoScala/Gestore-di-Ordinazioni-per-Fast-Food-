@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * La classe {@code RoundedButton} estende i bottoni base di Java per 
+ * la classe {@code RoundedButton} estende i bottoni base di Java per 
  * supportare la colorazione degli angoli arrotondati e personalizzazione di sfondi.
  */
 public class RoundedButton extends JButton {
@@ -12,12 +12,12 @@ public class RoundedButton extends JButton {
     private int radius;
     
     /**
-     * Costruisce il bottone.
+     * costruisce il bottone:
      *
-     * @param text   Il testo sul bottone.
-     * @param bg     Il colore di background.
-     * @param fg     Il colore del testo (foreground).
-     * @param radius Il raggio di curvatura per arrotondare i bordi.
+     * @param text -> il testo sul bottone.
+     * @param bg  ->  il colore di background.
+     * @param fg  ->  il colore del testo (foreground).
+     * @param radius -> il raggio di curvatura per arrotondare i bordi.
      */
     public RoundedButton(String text, Color bg, Color fg, int radius) {
         super(text);
@@ -30,15 +30,15 @@ public class RoundedButton extends JButton {
         setBorderPainted(false);
         setOpaque(false);
         
-        // Modifica: Cambia il cursore in "manina" quando ci si passa sopra
+        //  cambia il cursore in "manina" quando ci si passa sopra
         setCursor(new Cursor(Cursor.HAND_CURSOR)); 
     }
     
     /**
-     * Cambia i colori del bottone a runtime e ne forza il ridisegno.
+     * cambia i colori del bottone a runtime e ne forza il ridisegno:
      *
-     * @param bg Il nuovo colore di background.
-     * @param fg Il nuovo colore del testo.
+     * @param bg -> il nuovo colore di background.
+     * @param fg -> il nuovo colore del testo.
      */
     public void setButtonColor(Color bg, Color fg) {
         this.bgColor = bg;

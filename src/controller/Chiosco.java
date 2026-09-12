@@ -4,6 +4,7 @@ import domain.Catalogo;
 import domain.Ordine;
 import domain.Prodotto;
 import domain.Promozione;
+import domain.StatoOrdine; // ho aggiunto StatoOrdine perchè contiene l'Enum StatoOrdine invece della stringa
 import domain.VoceOrdine;
 import services.CodaCucina;
 import services.MonitorSala;
@@ -12,7 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * La classe {@code Chiosco} funge da Controller principale (GRASP) del sistema.
+ * la classe {@code Chiosco} funge da controller 
+ * principale (GRASP) del sistema.
  */
 public class Chiosco {
     
@@ -91,8 +93,11 @@ public class Chiosco {
             return "Errore: Ordine vuoto.";
         }
         
-        if (numeroCarta.length() == 16 && scadenza.length() == 4 && cvv.length() == 3) {
-            ordineCorrente.setStato("Ricevuto");
+        if (numeroCarta.length() == 16 && scadenza.length() == 4 && cvv.length() == 3) 
+            {
+
+            // modifica: ora assegniamo l'Enum invece della stringa
+            ordineCorrente.setStato(StatoOrdine.RICEVUTO); 
             codaCucina.aggiungiOrdine(ordineCorrente);
             storicoOrdini.add(ordineCorrente);
             
@@ -122,22 +127,21 @@ public class Chiosco {
         return codaCucina.mostraCodaGUI();
     }
 
-    // MODIFICA: Aggiornato per non impazzire se il prodotto viene cercato col case sbagliato
     public void prendiInCarico(String idOrdine) {
         Ordine o = codaCucina.getOrdine(idOrdine.toUpperCase());
         if (o != null) {
-            o.setStato("In Preparazione");
-            monitorSala.aggiornaStato(idOrdine.toUpperCase(), "In Preparazione");
+            // modifica: uso diretto dell'Enum
+            o.setStato(StatoOrdine.IN_PREPARAZIONE);
+            monitorSala.aggiornaStato(idOrdine.toUpperCase(), StatoOrdine.IN_PREPARAZIONE);
         }
     }
 
-    // MODIFICA: Aggiornato per far funzionare lo shift nella vista clienti e implementare il blocco di stato
     public void segnaPronto(String idOrdine) {
         Ordine o = codaCucina.getOrdine(idOrdine.toUpperCase());
-        // Controlla che l'ordine non sia nullo e che sia effettivamente "In Preparazione"
-        if (o != null && "In Preparazione".equals(o.getStato())) {
-            o.setStato("Pronto");
-            monitorSala.aggiornaStato(idOrdine.toUpperCase(), "Pronto");
+        // modifica: controllo di stato tramite identità '==' dell'Enum 
+        if (o != null && o.getStato() == StatoOrdine.IN_PREPARAZIONE) {
+            o.setStato(StatoOrdine.PRONTO);
+            monitorSala.aggiornaStato(idOrdine.toUpperCase(), StatoOrdine.PRONTO);
         }
     }
 

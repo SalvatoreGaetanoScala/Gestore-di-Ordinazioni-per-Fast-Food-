@@ -21,12 +21,11 @@ public class VoceOrdine {
         calcolaSubtotale();
     }
 
-    // MODIFICA: Aggiunto il setter per cambiare quantità in modo dinamico
+    // aggiungo il setter per cambiare quantità in modo dinamico
     public void setQuantita(int quantita) {
         this.quantita = quantita;
     }
 
-    // MODIFICA: Cambiato da private a public per renderlo accessibile dal Chiosco
     public void calcolaSubtotale() {
         double totalePers = 0.0;
         for (Personalizzazione p : personalizzazioni) {

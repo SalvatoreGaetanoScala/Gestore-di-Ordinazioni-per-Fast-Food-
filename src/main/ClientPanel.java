@@ -12,10 +12,11 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ClientPanel extends JPanel {
     
-    // Aggiunto per risolvere l'avviso "serial" in modo pulito
     private static final long serialVersionUID = 1L;
     
     private Chiosco chiosco;
@@ -511,7 +512,11 @@ public class ClientPanel extends JPanel {
                     } else if (pers.getTipo().equals("Rimozione")) {
                         ingredientiPanino.removeIf(ing -> ing.equalsIgnoreCase(pers.getIngrediente()));
                     } else if (pers.getTipo().equals("Aggiunta")) {
-                        ingredientiPanino.add(pers.getIngrediente().toLowerCase());
+                        if (pers.getIngrediente().startsWith("Extra ")) {
+                            righeDescrittive.add(pers.getIngrediente().toLowerCase() + " extra");
+                        } else {
+                            ingredientiPanino.add(pers.getIngrediente().toLowerCase());
+                        }
                     }
                 }
 
@@ -538,7 +543,11 @@ public class ClientPanel extends JPanel {
                 } else {
                     for(Personalizzazione pers : vo.getPersonalizzazioni()){
                         if (!pers.getTipo().equals("Bibita Combo") && !pers.getTipo().equals("Upgrade Patatine")) {
-                            righeDescrittive.add(pers.getTipo().toLowerCase() + " " + pers.getIngrediente().toLowerCase());
+                            if (pers.getIngrediente().startsWith("Extra ")) {
+                                righeDescrittive.add(pers.getIngrediente().toLowerCase() + " extra");
+                            } else {
+                                righeDescrittive.add(pers.getTipo().toLowerCase() + " " + pers.getIngrediente().toLowerCase());
+                            }
                         }
                     }
                 }
@@ -698,95 +707,265 @@ public class ClientPanel extends JPanel {
         lblTitolo.setBorder(new EmptyBorder(20, 0, 10, 0));
 
         String descText = "";
-        String[] ingredienti = null;
+        
+        String[] tempIngredienti = null;
 
         if (isCrispy) {
             descText = "Cotoletta di pollo, cheddar, insalata, salsa barbecue e salsa crispy";
-            ingredienti = new String[]{"Insalata", "Cheddar", "Salsa Barbecue", "Salsa Crispy"};
+            tempIngredienti = new String[]{"Cheddar", "Insalata", "Salsa Barbecue", "Salsa Crispy"};
         } else if (isAmerican) {
             descText = "Doppio hamburgher, cheddar, insalata e cetriolini";
-            ingredienti = new String[]{"Cheddar", "Insalata", "Cetriolini"};
+            tempIngredienti = new String[]{"Cheddar", "Insalata", "Cetriolini"};
         } else if (isDoubleBbq) {
             descText = "Doppio hamburgher, doppio cheddar, cetriolini, bacon e salsa crispy";
-            ingredienti = new String[]{"Cheddar", "Cetriolini", "Bacon", "Salsa Crispy"};
+            tempIngredienti = new String[]{"Doppio Cheddar", "Cetriolini", "Bacon", "Salsa Crispy"};
         } else if (isVeggie) {
             descText = "Hamburgher di ceci, doppia insalata e salsa hummus";
-            ingredienti = new String[]{"Doppia Insalata", "Salsa Hummus"};
+            tempIngredienti = new String[]{"Doppia Insalata", "Salsa Hummus"};
         } else if (isFish) {
             descText = "Filetto di pesce fritto, cheddar e maionese";
-            ingredienti = new String[]{"Cheddar", "Maionese"};
+            tempIngredienti = new String[]{"Cheddar", "Maionese"};
         }
+
+        final String[] ingredienti = tempIngredienti;
 
         JLabel lblDesc = new JLabel(descText, SwingConstants.CENTER);
         lblDesc.setFont(new Font("SansSerif", Font.ITALIC, 18));
         lblDesc.setForeground(Color.DARK_GRAY);
-        lblDesc.setBorder(new EmptyBorder(0, 0, 30, 0));
+        lblDesc.setBorder(new EmptyBorder(0, 0, 10, 0));
+
+        JLabel lblRule = new JLabel("(Puoi effettuare massimo un'aggiunta extra per ogni ingrediente)", SwingConstants.CENTER);
+        lblRule.setFont(new Font("SansSerif", Font.BOLD, 14));
+        lblRule.setForeground(COLOR_RED);
+        lblRule.setBorder(new EmptyBorder(0, 0, 30, 0));
 
         JPanel centerTop = new JPanel(new BorderLayout());
         centerTop.setOpaque(false);
         centerTop.add(lblTitolo, BorderLayout.NORTH);
-        centerTop.add(lblDesc, BorderLayout.SOUTH);
+        
+        JPanel pnlDescs = new JPanel(new BorderLayout());
+        pnlDescs.setOpaque(false);
+        pnlDescs.add(lblDesc, BorderLayout.NORTH);
+        pnlDescs.add(lblRule, BorderLayout.SOUTH);
+        
+        centerTop.add(pnlDescs, BorderLayout.SOUTH);
 
         JPanel listPanel = new JPanel();
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
         listPanel.setOpaque(false);
 
         List<String[]> daMantenere = new ArrayList<>(); 
-        List<String> rimossiAttualmente = new ArrayList<>();
-
+        
         for(Personalizzazione p : vo.getPersonalizzazioni()) {
-            if (p.getTipo().equals("Rimozione")) {
-                rimossiAttualmente.add(p.getIngrediente());
-            } else {
+            if (!p.getTipo().equals("Rimozione") && !p.getIngrediente().startsWith("Extra ")) {
                 daMantenere.add(new String[]{p.getTipo(), p.getIngrediente(), String.valueOf(p.getSovrapprezzo())});
             }
         }
 
-        List<String> nuoviRimossi = new ArrayList<>(rimossiAttualmente);
+        // --- MAPPE PER GESTIONE STATO INGREDIENTI ---
+        Map<String, Integer> ingredientQuantities = new HashMap<>();
+        Map<String, JPanel> aggiungiPanels = new HashMap<>();
+        Map<String, JPanel> dosesPanels = new HashMap<>();
+        Map<String, JLabel> priceLabels = new HashMap<>();
+        Map<String, JLabel> dosesQtyLabels = new HashMap<>();
+        Map<String, RoundedButton> dosesPlusButtons = new HashMap<>();
+        Map<String, RoundedButton> dosesMinusButtons = new HashMap<>();
+        
+        JPanel ingredientRowsContainer = new JPanel();
+        ingredientRowsContainer.setLayout(new BoxLayout(ingredientRowsContainer, BoxLayout.Y_AXIS));
+        ingredientRowsContainer.setOpaque(false);
 
         for (String ingr : ingredienti) {
-            JPanel row = new RoundedPanel(10, Color.WHITE);
-            row.setLayout(new BorderLayout(15, 10));
-            row.setBorder(new EmptyBorder(10, 30, 10, 30)); 
-            row.setMaximumSize(new Dimension(800, 70));
+            
+            double ingredientPrice = 1.00;
+            if (ingr.equalsIgnoreCase("Insalata") || ingr.equalsIgnoreCase("Doppia Insalata")) {
+                ingredientPrice = 0.20;
+            } else if (ingr.toLowerCase().contains("salsa")) {
+                ingredientPrice = 0.70;
+            }
+            final String finalIngredientPriceStr = String.format("%.2f", ingredientPrice);
 
-            JLabel lIngr = new JLabel(ingr);
-            lIngr.setFont(new Font("SansSerif", Font.BOLD, 20));
-            lIngr.setForeground(Color.BLACK);
-            row.add(lIngr, BorderLayout.CENTER);
+            boolean isRimossoInizialmente = false;
+            boolean isExtraInizialmente = false;
+            for(Personalizzazione p : vo.getPersonalizzazioni()) {
+                if (p.getTipo().equals("Rimozione") && p.getIngrediente().equalsIgnoreCase(ingr)) {
+                    isRimossoInizialmente = true;
+                    break;
+                } else if (p.getIngrediente().equalsIgnoreCase("Extra " + ingr)) {
+                    isExtraInizialmente = true;
+                    break;
+                }
+            }
+            int initialQty = isRimossoInizialmente ? 0 : (isExtraInizialmente ? 2 : 1);
+            ingredientQuantities.put(ingr, initialQty);
 
-            boolean isRimosso = nuoviRimossi.contains(ingr);
-            RoundedButton btnToggle = new RoundedButton(
-                isRimosso ? "Aggiungi" : "Elimina",
-                isRimosso ? COLOR_GREEN : COLOR_RED,
-                Color.WHITE, 18
-            );
-            btnToggle.setPreferredSize(new Dimension(140, 45));
+            JPanel cardSwapper = new JPanel(new CardLayout());
+            cardSwapper.setOpaque(false);
+            
+            // --- 1. PANNELLO AGGIUNGI (per Qty = 0) ---
+            JPanel aggiungiRow = new RoundedPanel(10, Color.WHITE);
+            aggiungiRow.setLayout(new BorderLayout(15, 10));
+            aggiungiRow.setBorder(new EmptyBorder(10, 30, 10, 30)); 
+            aggiungiRow.setMaximumSize(new Dimension(800, 70));
 
-            btnToggle.addActionListener(e -> {
-                if (btnToggle.getText().equals("Elimina")) {
-                    btnToggle.setText("Aggiungi");
-                    btnToggle.setButtonColor(COLOR_GREEN, Color.WHITE);
-                    nuoviRimossi.add(ingr);
-                } else {
-                    btnToggle.setText("Elimina");
-                    btnToggle.setButtonColor(COLOR_RED, Color.WHITE);
-                    nuoviRimossi.remove(ingr);
+            JLabel lIngrAdd = new JLabel(ingr);
+            lIngrAdd.setFont(new Font("SansSerif", Font.BOLD, 20));
+            lIngrAdd.setForeground(Color.BLACK);
+            aggiungiRow.add(lIngrAdd, BorderLayout.CENTER);
+
+            RoundedButton btnAggiungi = new RoundedButton("Aggiungi", COLOR_GREEN, Color.WHITE, 18);
+            btnAggiungi.setPreferredSize(new Dimension(140, 45));
+            btnAggiungi.addActionListener(e -> {
+                ingredientQuantities.put(ingr, 1);
+                
+                dosesQtyLabels.get(ingr).setText("1");
+                dosesPlusButtons.get(ingr).setEnabled(true);
+                dosesMinusButtons.get(ingr).setEnabled(true);
+                priceLabels.get(ingr).setText("");
+                
+                CardLayout cl = (CardLayout) cardSwapper.getLayout();
+                cl.show(cardSwapper, "Doses");
+            });
+            aggiungiRow.add(btnAggiungi, BorderLayout.EAST);
+            aggiungiPanels.put(ingr, aggiungiRow);
+            cardSwapper.add(aggiungiRow, "Aggiungi");
+
+            // --- 2. PANNELLO DOSI E ELIMINA (per Qty = 1 o 2) ---
+            JPanel dosesRow = new RoundedPanel(10, Color.WHITE);
+            dosesRow.setLayout(new BorderLayout(15, 10));
+            dosesRow.setBorder(new EmptyBorder(10, 30, 10, 30)); 
+            dosesRow.setMaximumSize(new Dimension(800, 70));
+
+            JPanel pnlLeft = new JPanel(new BorderLayout(10, 0));
+            pnlLeft.setOpaque(false);
+
+            JLabel lIngrDoses = new JLabel(ingr);
+            lIngrDoses.setFont(new Font("SansSerif", Font.BOLD, 20));
+            lIngrDoses.setForeground(Color.BLACK);
+            
+            JLabel lblPrice = new JLabel("");
+            lblPrice.setFont(new Font("SansSerif", Font.BOLD, 18));
+            lblPrice.setForeground(COLOR_GREEN);
+            priceLabels.put(ingr, lblPrice);
+            
+            pnlLeft.add(lIngrDoses, BorderLayout.WEST);
+            pnlLeft.add(lblPrice, BorderLayout.CENTER);
+            dosesRow.add(pnlLeft, BorderLayout.CENTER);
+
+            JPanel pnlRight = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 0));
+            pnlRight.setOpaque(false);
+
+            // --- DASHBOARD DOSI - 1 + ---
+            JPanel pnlDosesDashboard = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
+            pnlDosesDashboard.setOpaque(false);
+
+            RoundedButton btnMinus = new RoundedButton("-", COLOR_YELLOW, Color.BLACK, 15);
+            btnMinus.setPreferredSize(new Dimension(60, 40));
+            btnMinus.setFont(new Font("SansSerif", Font.BOLD, 18));
+            btnMinus.setMargin(new Insets(0, 0, 0, 0));
+            dosesMinusButtons.put(ingr, btnMinus);
+
+            JLabel lblDqty = new JLabel(String.valueOf(initialQty), SwingConstants.CENTER);
+            lblDqty.setFont(new Font("SansSerif", Font.BOLD, 20));
+            lblDqty.setPreferredSize(new Dimension(30, 40));
+            lblDqty.setForeground(Color.BLACK);
+            dosesQtyLabels.put(ingr, lblDqty);
+
+            RoundedButton btnPlus = new RoundedButton("+", COLOR_YELLOW, Color.BLACK, 15);
+            btnPlus.setPreferredSize(new Dimension(60, 40));
+            btnPlus.setFont(new Font("SansSerif", Font.BOLD, 18));
+            btnPlus.setMargin(new Insets(0, 0, 0, 0));
+            dosesPlusButtons.put(ingr, btnPlus);
+
+            btnMinus.addActionListener(e -> {
+                int qty = ingredientQuantities.get(ingr);
+                if (qty == 2) {
+                    qty = 1;
+                    ingredientQuantities.put(ingr, qty);
+                    lblDqty.setText(String.valueOf(qty));
+                    lblPrice.setText("");
+                    btnPlus.setEnabled(true);
+                    
+                } else if (qty == 1) {
+                    qty = 0;
+                    ingredientQuantities.put(ingr, qty);
+                    CardLayout cl = (CardLayout) cardSwapper.getLayout();
+                    cl.show(cardSwapper, "Aggiungi");
                 }
             });
 
-            row.add(btnToggle, BorderLayout.EAST);
-            listPanel.add(row);
-            listPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+            btnPlus.addActionListener(e -> {
+                int qty = ingredientQuantities.get(ingr);
+                if (qty == 1) {
+                    qty = 2;
+                    ingredientQuantities.put(ingr, qty);
+                    lblDqty.setText(String.valueOf(qty));
+                    lblPrice.setText("+" + finalIngredientPriceStr + "€");
+                    btnPlus.setEnabled(false); 
+                }
+            });
+
+            pnlDosesDashboard.add(btnMinus);
+            pnlDosesDashboard.add(lblDqty);
+            pnlDosesDashboard.add(btnPlus);
+
+            // --- TASTO ELIMINA ---
+            RoundedButton btnToggle = new RoundedButton("Elimina", COLOR_RED, Color.WHITE, 18);
+            btnToggle.setPreferredSize(new Dimension(140, 45));
+            btnToggle.addActionListener(e -> {
+                ingredientQuantities.put(ingr, 0);
+                CardLayout cl = (CardLayout) cardSwapper.getLayout();
+                cl.show(cardSwapper, "Aggiungi");
+            });
+
+            pnlRight.add(pnlDosesDashboard);
+            pnlRight.add(btnToggle);
+            dosesRow.add(pnlRight, BorderLayout.EAST);
+            dosesPanels.put(ingr, dosesRow);
+            cardSwapper.add(dosesRow, "Doses");
+            
+            // --- INIZIALIZZAZIONE VISTA CORRETTA ---
+            if (initialQty == 0) {
+                CardLayout cl = (CardLayout) cardSwapper.getLayout();
+                cl.show(cardSwapper, "Aggiungi");
+            } else {
+                CardLayout cl = (CardLayout) cardSwapper.getLayout();
+                cl.show(cardSwapper, "Doses");
+                lblDqty.setText(String.valueOf(initialQty));
+                if (initialQty == 2) {
+                    lblPrice.setText("+" + finalIngredientPriceStr + "€");
+                    btnPlus.setEnabled(false);
+                } else {
+                    lblPrice.setText("");
+                    btnPlus.setEnabled(true);
+                }
+            }
+
+            ingredientRowsContainer.add(cardSwapper);
+            ingredientRowsContainer.add(Box.createRigidArea(new Dimension(0, 15)));
         }
 
         RoundedButton btnConferma = new RoundedButton("CONFERMA MODIFICHE", COLOR_YELLOW, Color.BLACK, 25);
         btnConferma.setPreferredSize(new Dimension(350, 60));
         btnConferma.addActionListener(e -> {
             List<String[]> nuovePers = new ArrayList<>(daMantenere);
-            for(String r : nuoviRimossi) {
-                nuovePers.add(new String[]{"Rimozione", r, "0.0"});
+            
+            for (String ingr : ingredienti) {
+                int finalQty = ingredientQuantities.get(ingr);
+                
+                if (finalQty == 0) {
+                    nuovePers.add(new String[]{"Rimozione", ingr, "0.0"});
+                } else if (finalQty == 2) {
+                    double ingredientPrice = 1.00;
+                    if (ingr.equalsIgnoreCase("Insalata") || ingr.equalsIgnoreCase("Doppia Insalata")) {
+                        ingredientPrice = 0.20;
+                    } else if (ingr.toLowerCase().contains("salsa")) {
+                        ingredientPrice = 0.70;
+                    }
+                    nuovePers.add(new String[]{"Aggiunta", "Extra " + ingr, String.format("%.2f", ingredientPrice).replace(",", ".")});
+                }
             }
+            
             chiosco.aggiornaPersonalizzazioniVoce(index, nuovePers);
             switchView("Summary"); 
         });
@@ -797,7 +976,7 @@ public class ClientPanel extends JPanel {
         bottomPanel.add(btnConferma);
 
         pannelloModificaContainer.add(centerTop, BorderLayout.NORTH);
-        pannelloModificaContainer.add(creaTouchScroll(listPanel), BorderLayout.CENTER);
+        pannelloModificaContainer.add(creaTouchScroll(ingredientRowsContainer), BorderLayout.CENTER);
         pannelloModificaContainer.add(bottomPanel, BorderLayout.SOUTH);
 
         switchView("Modifica");
@@ -882,7 +1061,7 @@ public class ClientPanel extends JPanel {
         badgePanel.setVisible(false);
 
         lblPrezzoTotale = new JLabel("0,00€");
-        lblPrezzoTotale.setFont(new Font("SansSerif", Font.BOLD, 28));
+        lblPrezzoTotale.setFont(new Font("SansSerif", Font.BOLD, 26));
         lblPrezzoTotale.setForeground(Color.BLACK);
 
         leftPanel.add(btnIndietro);
@@ -902,7 +1081,9 @@ public class ClientPanel extends JPanel {
             RoundedButton[] btns = {btnMenuCompleto, btnPanini, btnSfiziosita, btnBibite, btnDolci};
             for (RoundedButton b : btns) b.setButtonColor(COLOR_YELLOW, Color.BLACK);
 
-            if (currentView.equals("Summary")) switchView("Payment");
+            if (currentView.equals("Summary")) {
+                switchView("Payment");
+            }
             else if (currentView.equals("Payment")) eseguiPagamentoDefinitivo();
             else switchView("Summary");
         });
@@ -910,6 +1091,14 @@ public class ClientPanel extends JPanel {
         rightWrapper.add(btnAvantiPaga);
 
         footerPanel.add(leftWrapper, BorderLayout.WEST);
+        
+        // --- SCRITTA VISIBILE DELLA PROMOZIONE NEL FOOTER ---
+        JLabel lblSconto = new JLabel("Sconto del 10% di benvenuto!", SwingConstants.CENTER);
+        lblSconto.setFont(new Font("SansSerif", Font.BOLD | Font.ITALIC, 18));
+        lblSconto.setForeground(COLOR_RED); 
+        footerPanel.add(lblSconto, BorderLayout.CENTER);
+        // --------------------------------------------------
+
         footerPanel.add(rightWrapper, BorderLayout.EAST);
 
         return footerPanel;
@@ -924,8 +1113,7 @@ public class ClientPanel extends JPanel {
 
     private void aggiornaFooter() {
         int count = chiosco.getNumeroVociCorrenti();
-        double totale = chiosco.getTotaleOrdineCorrente();
-
+        
         if (count == 0) {
             lblTestoOrdine.setText("Il tuo ordine è vuoto");
             badgePanel.setVisible(false);
@@ -936,7 +1124,18 @@ public class ClientPanel extends JPanel {
             lblTestoOrdine.setText("Il tuo ordine");
             badgePanel.setText(String.valueOf(count));
             badgePanel.setVisible(true);
-            lblPrezzoTotale.setText(String.format("%.2f€", totale));
+            
+            double totaleBase = 0.0;
+            for (VoceOrdine vo : chiosco.getVociCarrello()) {
+                totaleBase += vo.getSubTotale();
+            }
+            
+            double totaleScontato = totaleBase - (totaleBase * 0.10);
+            
+            String testoPrezzo = String.format("<html><strike style='color:red;'>%.2f€</strike> &nbsp;<span style='color:black;'>➔</span>&nbsp; <span style='color:green;'><b>%.2f€</b></span></html>", 
+                                  totaleBase, totaleScontato);
+            
+            lblPrezzoTotale.setText(testoPrezzo);
             
             if (currentView.equals("Modifica")) {
                 btnIndietro.setVisible(true);
@@ -968,7 +1167,22 @@ public class ClientPanel extends JPanel {
             return;
         }
 
+        // --- CONTROLLO VALIDITA' MESE SCADENZA (01 - 12) ---
+        try {
+            int mese = Integer.parseInt(rawScadenza.substring(0, 2));
+            if (mese < 1 || mese > 12) {
+                mostraErroreTouch("Mese di scadenza non valido!\nInserire un mese tra 01 e 12.");
+                return;
+            }
+        } catch (Exception e) {
+            mostraErroreTouch("Formato scadenza non valido!");
+            return;
+        }
+        // ----------------------------------------------------
+
+        // Eseguiamo il termine dell'ordine una sola volta prima del pagamento effettivo
         chiosco.terminaOrdine();
+        
         String esito = chiosco.paga(rawCarta, rawScadenza, rawCVV);
         
         mostraMessaggioTouch("ESITO TRANSAZIONE", esito);

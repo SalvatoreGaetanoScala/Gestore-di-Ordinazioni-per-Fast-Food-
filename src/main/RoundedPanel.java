@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * La classe {@code RoundedPanel} sostituisce il normale JPanel per poter 
+ * la classe {@code RoundedPanel} sostituisce il normale JPanel per poter 
  * applicare degli angoli smussati ai contenitori (ad esempio le card dei prodotti).
  */
 public class RoundedPanel extends JPanel {
@@ -12,10 +12,10 @@ public class RoundedPanel extends JPanel {
     private Color bgColor;
     
     /**
-     * Costruisce il pannello.
+     * costruisce il pannello.
      *
-     * @param radius  Il raggio di smussatura degli angoli.
-     * @param bgColor Il colore solido di sfondo.
+     * @param radius  -> il raggio di smussatura degli angoli.
+     * @param bgColor -> il colore solido di sfondo.
      */
     public RoundedPanel(int radius, Color bgColor) {
         super();
