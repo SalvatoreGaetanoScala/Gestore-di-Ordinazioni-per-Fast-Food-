@@ -20,9 +20,9 @@ class StatisticheVenditeTest {
 
     @Test
     void testGenerazioneReportGiornaliero() {
-        // questo SETUP simuliamo una giornata di lavoro con 2 clienti diversi
+        // SETUP simuliamo una giornata di lavoro con 2 clienti diversi
 
-        //  ##cliente 1 (spende 8.0€) 
+        // ##cliente 1 (aggiunge prodotto da 8.0€) 
         chiosco.iniziaOrdine();
 
         chiosco.aggiungiProdotto(
@@ -31,6 +31,7 @@ class StatisticheVenditeTest {
             null
         ); 
 
+        // Con terminaOrdine() viene applicato lo sconto del 10%: 8.0€ -> 7.20€
         chiosco.terminaOrdine();
         chiosco.paga(
             "1234567812345678", 
@@ -38,18 +39,17 @@ class StatisticheVenditeTest {
             "123"
         );
 
-        //  ##cliente 2 (spende 3.0€) 
+        // ##cliente 2 (aggiunge prodotto da 3.0€) 
         chiosco.iniziaOrdine();
         chiosco.aggiungiProdotto(
             "S1", 
             1, 
             null
-        ); // 3.0€
+        ); 
 
-
+        // Con terminaOrdine() viene applicato lo sconto del 10%: 3.0€ -> 2.70€
         chiosco.terminaOrdine();
-        chiosco.paga
-        (
+        chiosco.paga(
             "1234567812345678", 
             "1225", 
             "123"
@@ -58,19 +58,18 @@ class StatisticheVenditeTest {
         // #EXERCISE: chiediamo al ManagerPanel virtuale di generare il report
         String reportGenerato = chiosco.generaReport();
 
-        // #VERIFY: dobbiamo avere 2 ordini evasi e un incasso totale di 11.0€
+        // #VERIFY: dobbiamo avere 2 ordini evasi e un incasso totale di 9.90€ (7.20€ + 2.70€)
 
-        //qui verifico che ho effettivamente 2 ordini evasi 
+        // Verifico che ho effettivamente 2 ordini evasi 
         assertTrue(
             reportGenerato.contains("Totale ordini evasi: 2"), 
             "Il report deve conteggiare esattamente 2 ordini."
         );
         
-        //qui verifico che l'incasso totale dei 2 ordini evasi sia di 11.0€
+        // Verifico che l'incasso totale netto (già scontato del 10%) sia 9,90€
         assertTrue(
-            reportGenerato.contains("Incasso totale netto: €11,00"), 
-            "La somma degli incassi deve risultare 11,00€."
+            reportGenerato.contains("Incasso totale netto: €9,90"), 
+            "La somma degli incassi deve risultare 9,90€ a causa dell'applicazione dello sconto del 10%."
         ); 
-        // nb: il formattatore %.2f di Java usa la virgola ',' per la localizzazione italiana di default.
     }
 }
